@@ -1,0 +1,10 @@
+files
+comics
+node_modules
+previews
+build
+dist
+logs
+*.pem
+.env
+.*log*

@@ -1,0 +1,125 @@
+main#comicsSearcherHeader {
+    display: flex;
+    flex-direction: column;
+    min-height: 256px;
+}
+
+ul#otherPages {
+    margin-top: 16px;
+    padding: 10px;
+    background: #3d3d55;
+    border-radius: 12px 12px 0 0;
+    font-size: 12px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 8px;
+    cursor: pointer;
+    justify-content: center;
+    align-items: center;
+    list-style: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
+    transition: background 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+        transform 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+        border-color 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+        box-shadow 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+ul#otherPages li {
+    border-radius: 4px;
+    padding: 4px;
+    transition: background 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+        transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+ul#otherPages li:hover {
+    background: #4e4e66;
+    transform: scale(1.05);
+}
+
+#breadcrumb {
+    margin-bottom: 16px;
+    padding: 10px;
+    background: #3d3d55;
+    border-radius: 0 0 12px 12px;
+    font-size: 12px;
+    cursor: pointer;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    text-align: center;
+    transition: background 0.2s ease;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
+}
+
+#breadcrumb:hover {
+    background: #4e4e66;
+}
+
+#comic-search {
+    width: 100%;
+    margin-bottom: 16px;
+    padding: 12px;
+    background: #333344;
+    border: 1px solid transparent;
+    border-radius: 12px;
+    color: #fafafa;
+    outline: none;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+}
+
+#comic-search:focus {
+    background-color: #3d3d55;
+    border-color: #ff4e88;
+    box-shadow: 0 0 12px rgba(255, 78, 136, 0.4);
+}
+
+#comic-list {
+    display: grid;
+    padding: 16px;
+    background: #3d3d55;
+    border-radius: 16px;
+    grid-auto-rows: 128px;
+    overflow: hidden;
+    max-height: calc(100vh - 256px);
+    height: calc(100vh - 256px);
+    gap: 16px;
+    grid-template-columns: repeat(auto-fit, minmax(128px, 1fr));
+    width: 80vw;
+}
+
+.comic,
+.folder {
+    background: #4e4e66;
+    font-size: 20px;
+    text-align: center;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    border-radius: 16px;
+    border-left: 4px solid transparent;
+    transition: background 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+        transform 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+        border-color 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+        box-shadow 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: pointer;
+
+}
+
+.comic .icon, .folder .icon {
+    flex-shrink: 0;
+    flex-grow: 0;
+    flex-basis: 32px;
+}
+
+.folder:hover,
+.comic:hover {
+    background: #4e4e66;
+    border-left-color: #ff2aff66;
+    transform: translateX(2px);
+}
