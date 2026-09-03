@@ -7,23 +7,26 @@ const { requestLogger } = require("./modules/logger");
 const { helmetMiddleware } = require("./modules/security");
 const { processAllPreviews } = require("./modules/mediaConverters");
 const { getDate, getLocalIP, getAllExtensions } = require("./modules/smallfunctions");
+const {getDirectoryItems} = require("./modules/list") 
 
 const app = express();
 const PORT = 8645;
 
 app.disable('x-powered-by');
 app.use(helmetMiddleware);
-app.use(requestLogger);
 app.set("trust proxy", 1);
+
+app.use(requestLogger)
+
 
 const DIR = __dirname;
 
 const DATABASE_DIR = path.join(DIR, 'public');
-const PUBLIC_DIR = path.join(DATABASE_DIR, 'pages');
+const PUBLIC_DIR = path.join(DATABASE_DIR, 'frontend');
 const FILES_DIR = path.join(DATABASE_DIR, 'files');
 const COMICS_DIR = path.join(DATABASE_DIR, 'comics');
 const PREVIEWS_DIR = path.join(DATABASE_DIR, 'previews');
-const VIEWS_DIR = path.join(DATABASE_DIR, 'previews');
+const VIEWS_DIR = path.join(DATABASE_DIR, 'views');
 
 app.set('view engine', 'ejs');
 app.set('views', VIEWS_DIR);
@@ -33,12 +36,14 @@ app.use(express.urlencoded({ extended: true }));
 const publicExtensions = getAllExtensions(PUBLIC_DIR);
 
 app.get('/search/files*', (req, res) => {
-  res.sendFile(path.join(PUBLIC_DIR, 'search', 'files.html'));
+    res.sendFile(path.join(PUBLIC_DIR, 'search', 'files.html'));
 });
 
 app.get('/search/comics*', (req, res) => {
-  res.sendFile(path.join(PUBLIC_DIR, 'search', 'comics.html'));
+    res.sendFile(path.join(PUBLIC_DIR, 'search', 'comics.html'));
 });
+
+
 app.use(express.static(PUBLIC_DIR, { extensions: publicExtensions }));
 
 app.use('/download', express.static(FILES_DIR));
@@ -74,13 +79,18 @@ app.use((err, req, res, next) => {
     res.status(err.status || 500).end();
 });
 
-app.listen(PORT, "0.0.0.0", async () => {
-    console.log(`${getDate()} Server running on port http://${getLocalIP()}:${PORT}`);
+async function startServer() {
     await fsPromises.mkdir(PUBLIC_DIR, { recursive: true });
+    await fsPromises.mkdir(path.join(PUBLIC_DIR, 'search'), { recursive: true });
     await fsPromises.mkdir(FILES_DIR, { recursive: true });
     await fsPromises.mkdir(COMICS_DIR, { recursive: true });
     await fsPromises.mkdir(PREVIEWS_DIR, { recursive: true });
 
-    processAllPreviews();
-    setInterval(processAllPreviews, 30 * 60 * 1000);
-});
+    app.listen(PORT, "0.0.0.0", () => {
+        console.log(`${getDate()} Server running on port http://${getLocalIP()}:${PORT}`);
+        processAllPreviews();
+        setInterval(processAllPreviews, 30 * 60 * 1000);
+    });
+}
+
+startServer();

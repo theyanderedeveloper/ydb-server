@@ -21,7 +21,7 @@ async function fetchComics(path = "", push = true) {
         cleanPath = cleanPath.replace(/^\/search\/comics\/?/, "");
     }
 
-    const storageKey = `cache_comic_path_${cleanPath || "root"}`;
+    const storageKey = `comics_${cleanPath || "root"}`;
     const cachedData = localStorage.getItem(storageKey);
 
     if (cachedData) {
@@ -48,7 +48,7 @@ async function fetchComics(path = "", push = true) {
         const data = await response.json();
         ComicManConfig.cachedItems = data;
         renderList(ComicManConfig.cachedItems, cleanPath, push, false);
-        
+
         localStorage.setItem(storageKey, JSON.stringify(data));
 
     } catch (err) {
@@ -63,7 +63,7 @@ function renderBreadcrumbs(path) {
     const container = el("breadcrumb");
     container.innerHTML = "";
 
-const parts = ["Comics", ...path.split("/").filter(Boolean)];
+    const parts = ["Comics", ...path.split("/").filter(Boolean)];
     parts.forEach((part, i) => {
         const span = document.createElement("span");
         let decodedPath;
@@ -77,8 +77,8 @@ const parts = ["Comics", ...path.split("/").filter(Boolean)];
         span.className = "breadcrumb-item";
 
         const targetPath = i === 0 ? "" : parts.slice(1, i + 1).join("/");
-        
-        span.onclick = () => fetchComics(targetPath); 
+
+        span.onclick = () => fetchComics(targetPath);
 
         container.appendChild(span);
         if (i < parts.length - 1) {
