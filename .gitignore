@@ -1,4 +1,8 @@
+# Dynamic data hosted by the server.
 comics
+cpages
 files
-node_modules
 previews
+
+# Node stuff
+node_modules

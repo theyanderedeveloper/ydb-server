@@ -1,40 +1,26 @@
-import { setIconMap }  from '/scripts/fileSearcher/config';
-import { fetchFiles }  from '/scripts/fileSearcher/fileManager';
-import { showPreview } from '/scripts/fileSearcher/previewManager';
+import { setIconMap, FileManConfig, setEXTMap } from "/scripts/fileSearcher/config";
+import { fetchFiles, renderList } from "/scripts/fileSearcher/fileManager";
+import { showPreview } from "/scripts/fileSearcher/previewManager";
+
+const isFile = p => /\.[a-z0-9]{2,5}$/i.test(p);
+const getCleanPath = () => window.location.pathname.replace(/^\/search\/files\/?/, "");
 
 window.addEventListener("popstate", (e) => {
-    fetchFiles(e.state?.path || "");
+    const path = e.state?.path || getCleanPath();
+    (isFile(path) ? showPreview : fetchFiles)(path);
 });
 
 document.addEventListener("DOMContentLoaded", async () => {
     try {
-        const iconRes = await fetch('/iconMap.json');
-        const iconData = await iconRes.json();
-        setIconMap(iconData);
-    } catch (e) {
+        setIconMap(await (await fetch("/resources/iconMap.json")).json());
+        setEXTMap(await (await fetch("/resources/extMap.json")).json());
+    } catch {
         console.warn("Could not load icon map.");
     }
 
-    const initialPath = window.location.pathname;
-    const routePrefix = "/search/files";
+    const targetClean = getCleanPath();
+    
+    await fetchFiles(targetClean);
 
-    if (initialPath.startsWith(routePrefix)) {
-        const targetClean = initialPath.substring(routePrefix.length).replace(/^\//, "");
-
-        if (!targetClean) {
-            await fetchFiles("");
-            return;
-        }
-
-        const isDirectFileLink = /\.[a-zA-Z0-9]{2,5}$/.test(targetClean);
-
-        if (isDirectFileLink) {
-            await fetchFiles(targetClean);
-            showPreview(targetClean);
-        } else {
-            await fetchFiles(targetClean);
-        }
-    } else {
-        await fetchFiles("");
-    }
+    if (isFile(targetClean)) showPreview(targetClean);
 });

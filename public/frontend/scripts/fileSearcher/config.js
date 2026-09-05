@@ -7,7 +7,18 @@ export const FileManConfig = {
 };
 
 export let iconMap = {};
+export let EXT = { 
+    image: new Set(), 
+    video: new Set(), 
+    audio: new Set(), 
+    archive: new Set(), 
+    document: new Set(), 
+    text: new Set() 
+};
 
-export function setIconMap(newMap) {
-    iconMap = newMap;
-}
+export const setIconMap = (m) => (iconMap = m);
+export const setEXTMap = (m) => {
+    EXT = Object.fromEntries(
+        Object.entries(m).map(([k, v]) => [k, v instanceof Set ? v : new Set(v)])
+    );
+};

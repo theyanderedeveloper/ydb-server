@@ -1,18 +1,13 @@
-const { getDate } = require('./smallfunctions');
+const { getDate } = require("./smallfunctions");
 
 const requestLogger = (req, res, next) => {
-    const start = Date.now();
-    const originalEnd = res.end;
+    const start = process.hrtime.bigint();
 
-    res.end = function (...args) {
-        const duration = Date.now() - start;
-        const statusCode = res.statusCode;
+    res.on("finish", () => {
+        const duration = Number(process.hrtime.bigint() - start) / 1_000_000;
+        console.log(`${getDate()} ${req.method}: ${req.url} - Code: ${res.statusCode} - Took ${duration.toFixed(2)}ms`);
+    });
 
-        const logMessage = `${getDate()} ${req.method}: ${req.url} - Code: ${statusCode} - Took ${duration}ms`;
-        console.log(logMessage);
-
-        originalEnd.apply(this, args);
-    };
     next();
 };
 

@@ -1,12 +1,12 @@
-import { iconMap } from '/scripts/fileSearcher/config';
+import { iconMap } from "/scripts/fileSearcher/config";
 
 export function el(id) {
     return document.getElementById(id);
 }
 
 export function escapeHTML(str) {
-    return str.replace(/[&<>'"]/g, 
-        tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag)
+    return str.replace(/[&<>""]/g, 
+        tag => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "\'": "&#39;", "\"": "&quot;" }[tag] || tag)
     );
 }
 
@@ -29,10 +29,10 @@ export function formatDate(timestamp) {
     if (!timestamp) return "Unknown";
     const date = new Date(timestamp);
     return date.toLocaleDateString(undefined, {
-        year: 'numeric',
-        month: 'short',
-        day: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit'
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+        hour: "2-digit",
+        minute: "2-digit"
     });
 }

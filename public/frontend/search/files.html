@@ -2,57 +2,63 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Search Files | Yandere's Database</title>
-    <link rel="icon" type="image/x-icon" href="/favicon">
-    <link rel="canonical" href="https://database.theyandere.dev/search/files" />
-    
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://database.theyandere.dev/search/files">
-    <meta property="og:title" content="Search Files | Yandere's Database">
-    <meta property="og:description" content="Search files saved and listed in Yandere's Database.">
-    <meta property="og:image" content="/media/logo">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Search Files | Yandere's Database</title>
+  <link rel="icon" type="image/x-icon" href="/favicon">
+  <link rel="canonical" href="https://database.theyandere.dev/search/files" />
 
-    <meta name="twitter:card" content="summary">
-    <meta property="twitter:url" content="https://database.theyandere.dev/search/files">
-    <meta property="twitter:title" content="Search Files | Yandere's Database">
-    <meta property="twitter:description" content="Search files saved and listed in Yandere's Database.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://database.theyandere.dev/search/files">
+  <meta property="og:title" content="Search Files | Yandere's Database">
+  <meta property="og:description" content="Search files saved and listed in Yandere's Database.">
+  <meta property="og:image" content="/media/logo">
 
-    <link rel="stylesheet" href="/styles/base" />
-    <link rel="stylesheet" href="/styles/frames" />
-    <link rel="stylesheet" href="/styles/previews" />
-    <link rel="stylesheet" href="/styles/filesSearchSidebar" />
+  <meta name="twitter:card" content="summary">
+  <meta property="twitter:url" content="https://database.theyandere.dev/search/files">
+  <meta property="twitter:title" content="Search Files | Yandere's Database">
+  <meta property="twitter:description" content="Search files saved and listed in Yandere's Database.">
+
+  <link rel="stylesheet" href="/styles/base" />
+  <link rel="stylesheet" href="/styles/frames" />
+  <link rel="stylesheet" href="/styles/previews" />
+  <link rel="stylesheet" href="/styles/filesSearchSidebar" />
 </head>
 
 <body>
-    <div id="sidebar">
-        <ul id="otherPages">
-            <li><a href="/search/comics">Comics</a></li>
-            <li><a href="/search/files">Files</a></li>
-            <li><a href="/socials">Socials</a></li>
-            <li><a href="/about">About</a></li>
-            <li><a href="/">Main page</a></li>
-        </ul>
-        <div id="breadcrumb"></div>
+  <div id="sidebar">
+    <ul id="otherPages">
+      <li><a href="/search/comics">Comics</a></li>
+      <li><a href="/search/files">Files</a></li>
+      <li><a href="/socials">Socials</a></li>
+      <li><a href="/about">About</a></li>
+      <li><a href="/">Main page</a></li>
+    </ul>
+    <div id="breadcrumb"></div>
 
-        <div id="sort-bar">
-            <span class="sort-label">Sort by:</span>
-            <div id="sort-container"></div>
-        </div>
-
-        <div id="file-list"></div>
+    <div id="sort-bar">
+      <span class="sort-label">Sort by:</span>
+      <div id="sort-container">
+        <button class="sort-btn active" onclick="handleSort('name')">Name ▴</button>
+        <button class="sort-btn" onclick="handleSort('atime')">Created</button>
+        <button class="sort-btn" onclick="handleSort('mtime')">Modified</button>
+        <button class="sort-btn" onclick="handleSort('size')">Size</button>
+      </div>
     </div>
 
-    <div id="resizer" class="resizer"></div>
+    <div id="file-list"></div>
+  </div>
 
-    <div id="preview">
-        <div id="content">Select a file from the sidebar.</div>
-    </div>
+  <div id="resizer" class="resizer"></div>
+
+  <div id="preview">
+    <div id="content">Select a file from the sidebar.</div>
+  </div>
 </body>
 
 <script src="/scripts/lib/marked"></script>
 <script src="/scripts/lib/hls"></script>
 <script src="/scripts/general"></script>
 <script src="/scripts/fileSearcher/main" type="module"></script>
+
 </html>
