@@ -93,7 +93,7 @@ async function loadComicImages(data, url) {
         for (let i = 0; i < imageFilenames.length; i++) {
             const targetImageName = imageFilenames[i];
 
-            const imageUrl = `/download/${safePath}/${encodeURIComponent(targetImageName)}?type=creader`;
+            const imageUrl = `/download/${safePath}/${encodeURIComponent(targetImageName)}?type=creader&v=${Date.now()}`;
 
             const imgElement = document.createElement("img");
             imgElement.src = imageUrl;
@@ -263,6 +263,5 @@ function jumpToPageFromInput() {
             return;
         }
     }
-    // Revert input value to current page if invalid
     pageInput.value = currentPageIndex + 1;
 }
