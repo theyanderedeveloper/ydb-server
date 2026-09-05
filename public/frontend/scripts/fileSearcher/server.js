@@ -19,7 +19,6 @@ app.use(helmetMiddleware);
 app.set("trust proxy", 1);
 
 app.use(requestLogger)
-
 app.use(express.urlencoded({ extended: true }));
 
 
@@ -51,8 +50,6 @@ function getTargetBase(type) {
             return COMICS_DIR;
         case "creader":
             return CPAGES_DIR;
-        case "vidprev":
-            return PREVIEWS_DIR;
         default:
             return FILES_DIR;
     }

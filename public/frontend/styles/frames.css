@@ -1,13 +1,12 @@
-/* ==========================================================================
-   FRAME CONTAINER & LAYOUT
-   ========================================================================== */
 .frame {
-    background: #2c2c44;
-    padding: 30px;
+    background: var(--bg-surface);
+    padding: 24px;
     overflow: hidden auto;
-    animation: slideIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    animation: slideIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
     height: auto;
-    width: 100%
+    width: 100%;
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border-subtle);
 }
 
 .frameHeader {
@@ -15,83 +14,79 @@
     justify-content: flex-start;
     align-items: center;
     gap: 16px;
-    margin-bottom: 24px;
-    border-bottom: 2px solid #3d3d55;
+    border-bottom: 1px solid var(--border-subtle);
     padding-bottom: 16px;
     text-align: left;
-    height: 64px;
+    height: auto;
 }
 
 .frameBack {
-    font-size: 24px;
-    transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
-    -webkit-user-select: none;
-    -moz-user-select: none;
+    font-size: 60px;
+    color: var(--text-primary);
+    transition: var(--transition-smooth);
     user-select: none;
+    cursor: pointer;
 }
 
-
 .frameBack:hover {
-    transform: translateX(-5px) scale(1.1);
-    color: #ff4e88;
+    color: var(--accent);
 }
 
 .frameID {
-    font-size: 24px;
-    font-weight: bold;
-    letter-spacing: 2px;
+    font-size: 20px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    color: var(--text-primary);
 }
 
 .frameText {
-    line-height: 1.5;
+    line-height: 1.6;
     word-wrap: break-word;
-    white-space: wrap;
+    white-space: pre-wrap;
+    
 }
 
-/* ==========================================================================
-   FRAME NAVIGATION INTERACTION LIST
-   ========================================================================== */
 .frameLinkList {
     display: flex;
-    justify-content: center;
     flex-direction: column;
-    gap: 12px;
+    gap: 8px;
 }
 
 .frameLinkListItem {
     display: flex;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
     gap: 16px;
-    padding: 16px 20px;
-    background: #3d3d55;
-    border-radius: 12px;
-    border: 1px solid transparent;
-    -webkit-user-select: none;
-    -moz-user-select: none;
+    padding: 14px 18px;
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border-subtle);
     user-select: none;
-    transition: background 0.25s cubic-bezier(0.4, 0, 0.2, 1),
-        transform 0.25s cubic-bezier(0.4, 0, 0.2, 1),
-        border-color 0.25s cubic-bezier(0.4, 0, 0.2, 1),
-        box-shadow 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: pointer;
+    transition: var(--transition-smooth);
 }
 
 .frameLinkListItem img {
     top: 0;
+    width: 24px;
+    height: 24px;
+    border-radius: var(--radius-sm);
 }
 
 .frameLinkListItem span {
-    font-weight: bold;
-    font-size: 16px;
+    font-weight: 500;
+    font-size: 14px;
+    color: var(--text-primary);
 }
 
 .frameLinkListItem:hover {
-    background: #4b4b7a;
-    border-color: #bb2a66;
-    transform: scale(1.02);
-    box-shadow: 0 5px 16px rgba(255, 78, 136, 0.2);
+    background: rgba(255, 255, 255, 0.05);
+    border-color: var(--accent);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
 }
 
 .frameLinkListItem:active {
-    transform: scale(0.98);
+    transform: translateY(0);
+    background: rgba(255, 255, 255, 0.01);
 }

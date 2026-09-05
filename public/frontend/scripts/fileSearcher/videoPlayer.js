@@ -1,67 +1,53 @@
 export function injectMediaControls(filePath, videoElement) {
-    const controlsContainer = document.createElement('div');
-    controlsContainer.className = 'media-controls';
-
-    controlsContainer.innerHTML = `
-    <div class="quality-control">
+    const container = document.createElement("div");
+    container.className = "media-controls";
+    container.innerHTML = `
         <label for="quality-switcher">Select Quality:</label>
-        <select id="quality-switcher" name="quality-switcher">
-            <option value="raw">Raw (Source)</option>
-            <option value="1080p">1080p (FHD)</option>
-            <option value="720p" selected>720p (HD)</option>
-            <option value="480p">480p</option>
-            <option value="360p">360p</option>
-            <option value="240p">240p</option>
-            <option value="144p">144p</option>
-        </select>
-    </div>`;
+        <select id="quality-switcher">
+            ${["unedited", "1080p", "720p", "360p"]
+            .map(res => `<option value="${res}" ${res === "720p" ? "selected" : ""}>${res.toLowerCase()}</option>`).join("")}
+        </select>`;
 
-    videoElement.parentNode.insertBefore(controlsContainer, videoElement.nextSibling);
-
-    const switcher = controlsContainer.querySelector('#quality-switcher');
-    switcher.addEventListener('change', (e) => {
-        const video = document.getElementById('video-player');
-        loadVideo(filePath, e.target.value, video.currentTime);
+    videoElement.after(container);
+    container.querySelector("#quality-switcher").addEventListener("change", (e) => {
+        loadVideo(filePath, e.target.value, document.getElementById("video-player")?.currentTime || 0);
     });
 }
 
-export const loadVideo = (filePath, res = '720p', startTime = 0) => {
-    const video = document.getElementById('video-player');
-    if (!video) return;
-    
-    const manifestUrl = `/previews/${filePath}/${res}/preview.m3u8`;
-    const segmentsBaseUrl = `/previews/${filePath}/${res}/`;
+export const loadVideo = (filePath, res = "720p", startTime = 0) => {
+    const video = document.getElementById("video-player");
+    if (!video || !window.Hls || !Hls.isSupported()) return;
 
-    if (window.Hls && Hls.isSupported()) {
-        if (window.hlsInstance) window.hlsInstance.destroy();
+    window.hlsInstance?.destroy();
 
-        const CustomLoader = class extends Hls.DefaultConfig.loader {
-            load(context, config, callbacks) {
-                if (context.url.endsWith('.ts') || context.url.endsWith('.m4s')) {
-                    const fileName = context.url.split('/').pop();
-                    context.url = `${segmentsBaseUrl}${fileName}`;
-                }
-                super.load(context, config, callbacks);
+    const base = `/download/${filePath}/${res}/`;
+    const CustomLoader = class extends Hls.DefaultConfig.loader {
+        load(context, config, callbacks) {
+            if (/\.(ts|m4s)(\?.*)?$/i.test(context.url)) {
+                const fileName = context.url.split("/").pop().split("?")[0];
+                context.url = `${base}${fileName}?type=vidprev`;
             }
-        };
+            super.load(context, config, callbacks);
+        }
+    };
 
-        const hls = new Hls({ fLoader: CustomLoader });
-        window.hlsInstance = hls;
-        hls.loadSource(manifestUrl);
-        hls.attachMedia(video);
+    const hls = new Hls({ fLoader: CustomLoader });
+    window.hlsInstance = hls;
+    hls.loadSource(`${base}preview.m3u8?type=vidprev`);
+    hls.attachMedia(video);
 
-        hls.on(Hls.Events.MANIFEST_PARSED, () => {
-            video.currentTime = startTime;
-            video.play();
+    hls.on(Hls.Events.MANIFEST_PARSED, () => {
+        video.currentTime = startTime;
+        video.play().catch(error => {
+            console.warn("Autoplay blocked by browser policy:", error);
         });
+    });
 
-        hls.on(Hls.Events.ERROR, (event, data) => {
-            if (data.fatal) {
-                hls.destroy();
-                video.removeAttribute('src');
-                video.load();
-                video.textContent = 'Video loading failed.';
-            }
-        });
-    }
+    hls.on(Hls.Events.ERROR, (_, data) => {
+        if (!data.fatal) return;
+        hls.destroy();
+        video.removeAttribute("src");
+        video.load();
+        video.textContent = "Video loading failed.";
+    });
 };

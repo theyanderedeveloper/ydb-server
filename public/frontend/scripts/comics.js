@@ -1,7 +1,3 @@
-const CONFIG = {
-    apiBase: "/api",
-};
-
 const ComicManConfig = {
     currentPath: "",
     currentPreviewPath: "",
@@ -30,7 +26,7 @@ async function fetchComics(path = "", push = true) {
     }
 
     try {
-        const url = `${CONFIG.apiBase}/list?path=${encodeURIComponent(cleanPath)}&type=comic`;
+        const url = `/list?type=comic&path=${encodeURIComponent(cleanPath)}`;
         const response = await fetch(url);
 
         if (response.status === 404) {
@@ -92,7 +88,6 @@ function renderBreadcrumbs(path) {
 function renderList(items, path, push = true) {
     ComicManConfig.currentPath = path;
     const comicList = el("comic-list");
-    const searchTerm = el("comic-search").value.toLowerCase();
 
     comicList.innerHTML = "";
     const fragment = document.createDocumentFragment();
@@ -119,8 +114,6 @@ function renderList(items, path, push = true) {
     }
 
     items.forEach((item) => {
-        if (searchTerm && !item.name.toLowerCase().includes(searchTerm)) return;
-
         const div = document.createElement("div");
         div.className = item.type === "dir" ? "folder" : "comic";
         if (`comics/${item.path}` === ComicManConfig.currentPreviewPath) div.classList.add("active-item");
@@ -129,7 +122,6 @@ function renderList(items, path, push = true) {
 
         div.onclick = () => {
             if (item.type === "dir") {
-                el("comic-search").value = "";
                 fetchComics(item.path);
             } else {
                 showPreview(item.path);
@@ -146,7 +138,7 @@ window.addEventListener("popstate", (e) => {
 });
 
 function showPreview(comicPath) {
-    const redirectUrl = '/comics?path=' + encodeURIComponent(comicPath);
+    const redirectUrl = '/comic?path=' + encodeURIComponent(comicPath);
     window.location.href = redirectUrl;
 }
 

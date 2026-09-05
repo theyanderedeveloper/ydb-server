@@ -1,11 +1,11 @@
-const { promisify } = require('util');
+const { promisify } = require("util");
 const ffprobe = promisify(require("fluent-ffmpeg").ffprobe);
-const path = require('path');
-const os = require('os');
-const fs = require('fs');
+const path = require("path");
+const os = require("os");
+const fs = require("fs");
 
-const BASE_FILES = path.resolve(__dirname, '..', "files");
-const BASE_COMICS = path.resolve(__dirname, '..', "comics");
+const BASE_FILES = path.resolve(__dirname, "..", "files");
+const BASE_COMICS = path.resolve(__dirname, "..", "comics");
 
 function getDate() {
     return `[${new Date().toLocaleString()}]`;
@@ -14,15 +14,13 @@ function getDate() {
 async function isSafeToProcess(filePath) {
     try {
         const metadata = await ffprobe(filePath);
-        if (metadata.streams.some(s => s.codec_type === 'video')) {
+        if (metadata?.streams?.some(s => s.codec_type === "video")) {
             return true;
         }
-        else {
-            console.error(`${getDate()} Detected unsafe file: ${filePath}:`);
-            return false;
-        }
+        console.error(`${getDate()} Detected unsafe file: ${filePath}`);
+        return false;
     } catch (e) {
-        console.error(`${getDate()} Error during checking the file: ${filePath}: ${e.message}`);
+        console.error(`${getDate()} Error checking file ${filePath}: ${e.message}`);
         return false;
     }
 }
@@ -38,33 +36,38 @@ const getSafePath = (userPath, baseDir) => {
     return resolvedPath;
 };
 
+const getTargetBase = (type) => (type === "comic" ? BASE_COMICS : BASE_FILES);
 
-const getTargetBase = (type) => {
-    if (type === "comic") return BASE_COMICS;
-    return BASE_FILES;
-};
-
+let cachedLocalIP = null;
 
 function getLocalIP() {
-    const interfaces = os.networkInterfaces();
-    const match = Object.values(interfaces)
-        .flat()
-        .find(net => net && net.family === 'IPv4' && !net.internal);
+    if (cachedLocalIP) return cachedLocalIP;
 
-    return match ? match.address : '192.168.8.205';
+    const interfaces = os.networkInterfaces();
+    for (const netInterface of Object.values(interfaces)) {
+        for (const net of netInterface || []) {
+            if (net && net.family === "IPv4" && !net.internal) {
+                cachedLocalIP = net.address;
+                return cachedLocalIP;
+            }
+        }
+    }
+    return "192.168.8.205";
 }
 
 function getAllExtensions(dir, extensionsSet = new Set()) {
-    if (!fs.existsSync(dir)) return [];
-    const entries = fs.readdirSync(dir, { withFileTypes: true });
-    for (const entry of entries) {
-        const fullPath = path.join(dir, entry.name);
-        if (entry.isDirectory()) {
-            getAllExtensions(fullPath, extensionsSet);
-        } else if (entry.isFile()) {
-            const ext = path.extname(entry.name).toLowerCase().replace('.', '');
-            if (ext) extensionsSet.add(ext);
+    try {
+        const entries = fs.readdirSync(dir, { withFileTypes: true });
+        for (const entry of entries) {
+            const fullPath = path.join(dir, entry.name);
+            if (entry.isDirectory()) {
+                getAllExtensions(fullPath, extensionsSet);
+            } else if (entry.isFile()) {
+                const ext = path.extname(entry.name).toLowerCase().slice(1);
+                if (ext) extensionsSet.add(ext);
+            }
         }
+    } catch {
     }
     return Array.from(extensionsSet);
 }

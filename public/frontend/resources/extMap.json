@@ -1,0 +1,33 @@
+{
+  "image": [
+    "jpg", "jpeg", "png", "gif", "webp", "svg", "bmp", "ico", "tif", "tiff", "avif", "heic", "heif"
+  ],
+  "video": [
+    "mp4", "webm", "avi", "mov", "mkv", "flv", "3gp", "3g2", "asf", "m4v", "mpeg", "mpg"
+  ],
+  "audio": [
+    "mp3", "wav", "flac", "aac", "m4a", "ogg", "opus", "wma", "aiff", "ac3", "dts", "ape", "au", "mid", "midi"
+  ],
+  "archive": [
+    "zip", "rar", "tar", "gz", "7z", "iso", "bz2", "xz", "msi", "deb", "rpm", "apk", "dmg", "img", "vhd"
+  ],
+  "document": [
+    "doc", "docx", "xls", "xlsx", "ppt", "pptx", "rtf", "odt", "odp", "epub", "mobi"
+  ],
+  "text": [
+    "js", "jsx", "ts", "tsx", "html", "htm", "css", "scss", "sass", "less", "vue", "svelte", "astro",
+    "ejs", "pug", "jade", "haml", "twig", "njk", "liquid", "hbs", "handlebars", "mustache", "jsp",
+    "aspx", "ascx", "master", "cshtml", "vbhtml", "razor", "gsp", "cfm", "cfc", "xhtml", "json",
+    "jsonc", "json5", "hjson", "xml", "yaml", "yml", "toml", "env", "ini", "properties", "prop",
+    "plist", "reg", "inf", "cfg", "conf", "config", "csv", "tsv", "ndjson", "proto", "textproto",
+    "py", "pyi", "pyc", "pyx", "java", "class", "c", "cpp", "h", "hpp", "cs", "go", "rs", "rb",
+    "php", "sh", "bash", "zsh", "fish", "ksh", "ps1", "psm1", "psd1", "bat", "cmd", "sql", "kt",
+    "kts", "swift", "d", "di", "mm", "m", "cxx", "cc", "hh", "hxx", "rlib", "r", "R", "jl",
+    "lua", "luac", "pl", "pm", "t", "raku", "rakumod", "vbs", "vb", "fs", "fsx", "fsi", "ml",
+    "mli", "hs", "lhs", "erl", "hrl", "ex", "exs", "eex", "leex", "heex", "clj", "cljs", "cljc",
+    "edn", "scala", "sc", "nim", "zig", "v", "odin", "cr", "hx", "rkt", "scm", "ss", "lisp",
+    "cl", "lsp", "gleam", "roc", "wgsl", "glsl", "cu", "cuh", "hip", "sycl", "dart", "pas",
+    "cob", "cbl", "ada", "adb", "ads", "asm", "s", "nasm", "awk", "sed", "vala", "vapi",
+    "mojo", "elm", "txt", "log", "patch", "diff", "tex", "ltx", "bib", "ipynb"
+  ]
+}

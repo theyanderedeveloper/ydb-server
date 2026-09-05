@@ -1,31 +1,28 @@
+/* ==========================================================================
+   COMIC READER LAYOUT & INTERACTIONS
+   ========================================================================== */
 #comicBack,
 .fullScreen,
 #comicFooter,
 .comicPageSwitcher {
-    -webkit-user-select: none;
-    -moz-user-select: none;
     user-select: none;
 }
 
 @keyframes fadeInPage {
     from {
         opacity: 0;
-        transform: scale(0.99);
+        transform: scale(0.98);
     }
-
     to {
         opacity: 1;
         transform: scale(1);
     }
 }
 
-/* ==========================================================================
-   3. COMIC READER MAIN LAYOUT
-   ========================================================================== */
 #comicReaderMain {
     width: 100vw;
     min-height: 100vh;
-    background: #2c2c44;
+    background: var(--bg-main);
     overflow: hidden auto;
     display: flex;
     flex-direction: column;
@@ -44,12 +41,11 @@
     text-align: left;
     max-width: 100%;
     width: 100%;
-    padding: 16px;
-    box-sizing: border-box;
-    background: #222233;
-    backdrop-filter: blur(8px);
+    padding: 24px;
+    background: var(--bg-surface);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border-subtle);
     height: auto;
-
 }
 
 #comicPath,
@@ -58,50 +54,49 @@
 }
 
 #comicFullName {
-    padding-left: 16px;
-    padding-right: 16px;
-    font-size: 20px;
-    padding-top: 8px;
-    padding-bottom: 8px;
+    padding: 12px 16px;
+    font-size: 18px;
+    font-weight: 600;
     width: 100%;
-    border-bottom: 2px solid #fafafa;
-    border-top: 2px solid #fafafa;
-
+    border-top: 1px solid var(--border-subtle);
+    border-bottom: 1px solid var(--border-subtle);
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: var(--radius-sm);
 }
 
 #comicDescription {
-    font-size: 16px;
+    font-size: 14px;
+    color: var(--text-secondary);
     min-width: 0;
     word-wrap: break-word;
-
 }
 
-
 #comicBack {
-    font-size: 24px;
-    transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    font-size: 20px;
+    color: var(--text-primary);
+    transition: var(--transition-smooth);
     cursor: pointer;
 }
 
 #comicBack:hover {
-    transform: translateX(-5px) scale(1.1);
-    color: #ff4e88;
+    transform: translateX(-4px);
+    color: var(--accent);
 }
 
 #comicPath {
-    font-size: 24px;
-    font-weight: bold;
-    letter-spacing: 2px;
+    font-size: 20px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
 }
 
 /* ==========================================================================
-   4. COMIC CANVASVIEWPORT
+   COMIC CANVASVIEWPORT
    ========================================================================== */
 #comicContent {
     display: flex;
     justify-content: center;
     align-items: center;
-    background: #1e1e2e;
+    background: var(--bg-code);
     height: 100vh;
     width: 100vw;
     position: relative;
@@ -109,19 +104,18 @@
 }
 
 .comicPage.active {
-    animation: fadeInPage 0.25s cubic-bezier(0.215, 0.610, 0.355, 1) forwards;
+    animation: fadeInPage 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 /* ==========================================================================
-   5. CONTROLS & FOOTER NAVIGATOR
+   CONTROLS & FOOTER NAVIGATOR
    ========================================================================== */
 #Controls {
     display: flex;
     flex-direction: row;
     align-items: center;
-    gap: 6px;
-    margin-left: 12px;
-    margin-right: 8px;
+    gap: 8px;
+    margin: 0 12px;
     z-index: 10;
     height: 100%;
 }
@@ -131,56 +125,54 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: #2c2c44;
-    color: #fafafa;
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    border-radius: 6px;
-    width: 32px;
-    height: 32px;
+    background-color: var(--bg-surface);
+    color: var(--text-primary);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-sm);
+    width: 36px;
+    height: 36px;
     cursor: pointer;
-    font-size: 14px;
-    transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1),
-        background-color 0.2s ease,
-        color 0.2s ease,
-        box-shadow 0.2s ease;
+    font-size: 13px;
+    transition: var(--transition-smooth);
 }
 
 .fullScreen {
     margin-left: 0 !important;
     padding: 0 !important;
-    flex-basis: 32px !important;
+    flex-basis: 36px !important;
 }
 
 .comicBtn:hover,
 .fullScreen:hover {
-    transform: scale(1.1) translateY(-2px);
-    background-color: #4b4b7a;
-    color: #ff4e88;
-    box-shadow: 0 4px 12px rgba(255, 78, 136, 0.25);
+    transform: translateY(-1px);
+    background-color: var(--bg-surface);
+    border-color: var(--accent);
+    color: var(--accent);
+    box-shadow: 0 4px 12px var(--accent-glow);
     z-index: 20;
 }
 
 .comicBtn:active,
 .fullScreen:active {
-    transform: scale(0.95);
-    background-color: #1e1e2e;
+    transform: translateY(0);
+    background-color: var(--bg-main);
 }
 
 #comicFooter {
     display: flex;
     flex-direction: row;
     align-items: center;
-    justify-content: space-between;
-    cursor: pointer;
+    justify-content: flex-start;
     z-index: 5;
     position: fixed;
-    top: auto;
     bottom: 0;
     width: 100vw;
-    backdrop-filter: blur(4px);
-    height: 4vh;
-    padding: 8px 0 0 8px;
-    background: rgba(18, 18, 31, 0);
+    backdrop-filter: blur(8px);
+    height: 60px;
+    padding: 0 12px;
+    background: rgba(15, 17, 23, 0.75);
+    border-top: 1px solid var(--border-subtle);
+    gap: 12px;
 }
 
 #comicControls {
@@ -188,47 +180,98 @@
     margin-bottom: 0;
     display: flex;
     flex-direction: row;
-    justify-content: space-around;
-    flex-grow: 0;
-    width: 128px;
+    justify-content: flex-start;
+    align-items: center;
+    flex-shrink: 0;
+    width: auto;
+    margin: 0;
+    position: absolute;
+    right: 12px;
 }
 
 #comicPagesSelector {
     display: flex;
     flex-direction: row;
+    flex-wrap: nowrap;
     gap: 4px;
     z-index: 5;
-    flex-grow: 1;
-    height: 1vh;
-    transition: height 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-    justify-content: stretch;
-    align-items: flex-end;
+    position: absolute;
+    right: 296px;
+    left: 12px; 
+    bottom: 8px;
+    max-height: 40px;
+    overflow: hidden;
+    background: rgba(15, 17, 23, 0.95);
+    backdrop-filter: blur(12px);
+    border: 1px solid var(--border-subtle);
+    border-bottom: none;
+    border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+    transition: max-height 0.25s cubic-bezier(0.16, 1, 0.3, 1), padding 0.25s ease;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 4px 4px
 }
 
-#comicFooter:hover #comicPagesSelector {
-    height: 100%;
-}
 
 .comicPageSwitcher {
-    transform: skewX(-20deg);
-    background: #223;
-    flex-basis: 64px;
-    flex-grow: 1;
-    height: 100%;
-    border-radius: 4px;
+    background: var(--border-subtle);
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    border-radius: var(--radius-sm);
     z-index: 5;
     position: relative;
-    overflow: hidden;
     cursor: pointer;
-    transition: background 0.35s ease, transform 0.15s ease;
+    flex-shrink: 0;
+    transition: background 0.2s ease, transform 0.2s ease, color 0.2s ease;
     transition-delay: var(--delay, 0ms);
 }
 
 .comicPageSwitcher:hover {
-    transform: skewX(-20deg) scaleY(1.3);
+    background: var(--text-secondary);
+    color: var(--bg-main);
+    transform: translateY(-2px);
 }
 
 .comicPageSwitcher.active {
-    background: #fefe43;
-    box-shadow: 0 0 8px rgba(254, 254, 67, 0.5);
+    background: var(--accent);
+    color: var(--text-primary);
+    box-shadow: 0 0 12px var(--accent-glow);
+}
+
+#comicPageInput {
+    background-color: var(--bg-surface);
+    color: var(--text-primary);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-sm);
+    height: 36px;
+    padding: 0 6px;
+    font-size: 13px;
+    font-family: inherit;
+    text-align: center;
+    outline: none;
+    transition: var(--transition-smooth);
+    -moz-appearance: textfield;
+}
+
+#comicPageInput::-webkit-outer-spin-button,
+#comicPageInput::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+#comicPageInput:hover {
+    border-color: var(--accent);
+}
+
+#comicPageInput:focus {
+    background-color: var(--bg-surface);
+    border-color: var(--accent);
+    box-shadow: 0 4px 12px var(--accent-glow);
+    color: var(--accent);
 }

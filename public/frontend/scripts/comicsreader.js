@@ -1,10 +1,9 @@
-const zip = new JSZip();
-
 const queryParams = new URLSearchParams(window.location.search);
 const comicFullName = queryParams.get("path");
 let currentPageIndex = parseInt(queryParams.get("page"), 10) || 0;
-let comicData
+let comicData;
 
+const pageInput = document.querySelector("#comicPageInput");
 const loadedPageElements = [];
 const switcherElements = [];
 
@@ -26,12 +25,11 @@ const switcherElements = [];
                 }
             });
 
-
             document.querySelector("#comicPath").innerHTML = `<a id="comicBack">↩ ${decodedPath}</a>`;
 
-            const comicFile = await getComicFile(comicFullName);
+            const comicInfo = await getComicMetadata(comicFullName);
 
-            await loadComicImages(comicFile);
+            await loadComicImages(comicInfo, comicFullName);
 
         } catch (err) {
             console.error("Error loading comic:", err);
@@ -42,19 +40,18 @@ const switcherElements = [];
     }
 })();
 
-async function getComicFile(url) {
+async function getComicMetadata(url) {
     try {
         const safePath = encodeURIComponent(url);
-        const response = await fetch(`/api/download?path=${safePath}&type=comic`);
+        const response = await fetch(`/download/${safePath}/comic.json?type=creader`);
 
         if (!response.ok) {
-            throw new Error(`Failed to fetch comic: ${response.status} ${response.statusText}`);
+            throw new Error(`Failed to fetch comic.json: ${response.status} ${response.statusText}`);
         }
 
-        const blob = await response.blob();
-        return blob;
+        return await response.json();
     } catch (error) {
-        console.error("Error downloading comic file:", error);
+        console.error("Error downloading comic metadata:", error);
         throw error;
     }
 }
@@ -62,17 +59,9 @@ async function getComicFile(url) {
 let globalRatioX = 1;
 let globalRatioY = 1;
 
-async function loadComicImages(zipBlob) {
+async function loadComicImages(data, url) {
     try {
-        const contents = await zip.loadAsync(zipBlob);
-
-        const comicFullDetails = contents.file("comic.json");
-        if (!comicFullDetails) {
-            throw new Error("comic.json not found in the zip archive.");
-        }
-
-        const jsonString = await comicFullDetails.async("string");
-        comicData = JSON.parse(jsonString);
+        comicData = data;
 
         const imageFilenames = comicData.images;
         if (!imageFilenames || imageFilenames.length === 0) {
@@ -99,17 +88,12 @@ async function loadComicImages(zipBlob) {
             }
         }
 
+        const safePath = encodeURIComponent(url);
+
         for (let i = 0; i < imageFilenames.length; i++) {
             const targetImageName = imageFilenames[i];
-            const imageFile = contents.file(targetImageName);
 
-            if (!imageFile) {
-                console.warn(`Image ${targetImageName} not found in the zip.`);
-                continue;
-            }
-
-            const imageBlob = await imageFile.async("blob");
-            const imageUrl = URL.createObjectURL(imageBlob);
+            const imageUrl = `/download/${safePath}/${encodeURIComponent(targetImageName)}?type=creader`;
 
             const imgElement = document.createElement("img");
             imgElement.src = imageUrl;
@@ -125,6 +109,7 @@ async function loadComicImages(zipBlob) {
 
             const comicPageSwitcher = document.createElement("div");
             comicPageSwitcher.classList.add("comicPageSwitcher");
+            comicPageSwitcher.textContent = i + 1;
 
             if (i <= currentPageIndex) {
                 comicPageSwitcher.classList.add("active");
@@ -159,9 +144,7 @@ async function loadComicImages(zipBlob) {
         if (comicData.fullname) {
             document.getElementById("comicFullName").textContent = comicData.fullname;
             document.querySelector("title").textContent = `Reading ${comicData.fullname} | Yandere's Database`;
-            
         }
-
 
     } catch (error) {
         console.error("Error processing comic:", error);
@@ -197,7 +180,9 @@ function switchPage(index) {
     nextPage.classList.add("active");
 
     const goingForward = index > currentPageIndex;
-    const baseDelay = 40;
+    const distance = Math.abs(index - currentPageIndex);
+    
+    const baseDelay = distance >= 100 ? 0 : 0.25;
 
     switcherElements.forEach((element, i) => {
         let delayFactor = 0;
@@ -218,6 +203,10 @@ function switchPage(index) {
             element.classList.remove("active");
         }
     });
+
+    switcherElements[index].scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
+    
+    pageInput.value = index + 1;
 
     currentPageIndex = index;
 }
@@ -244,9 +233,36 @@ window.addEventListener("keydown", (e) => {
     }
 });
 
-
 document.addEventListener("DOMContentLoaded", () => {
     document.querySelector("#comicBack").addEventListener("click", () => {
         history.back();
     });
 });
+
+
+
+if (pageInput) {
+    pageInput.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") {
+            jumpToPageFromInput();
+            pageInput.blur();
+        }
+    });
+
+    pageInput.addEventListener("blur", () => {
+        jumpToPageFromInput();
+    });
+}
+
+function jumpToPageFromInput() {
+    const pageVal = parseInt(pageInput.value, 10);
+    if (!isNaN(pageVal)) {
+        const targetIndex = pageVal - 1;
+        if (targetIndex >= 0 && targetIndex < loadedPageElements.length) {
+            switchPage(targetIndex);
+            return;
+        }
+    }
+    // Revert input value to current page if invalid
+    pageInput.value = currentPageIndex + 1;
+}

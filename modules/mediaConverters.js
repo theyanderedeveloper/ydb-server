@@ -1,52 +1,53 @@
-const fs = require('fs');
-const fsPromises = require('fs/promises');
-const path = require('path');
+const fs = require("fs");
+const fsPromises = require("fs/promises");
+const path = require("path");
 const ffmpeg = require("fluent-ffmpeg");
-const pLimit = require('p-limit');
-const { isSafeToProcess } = require('./smallfunctions');
-const { getDate } = require('./smallfunctions');
+const pLimit = require("p-limit");
+const { isSafeToProcess } = require("./smallfunctions");
+const { getDate } = require("./smallfunctions");
 
 const DIR = path.resolve(__dirname, "..", "public")
 const BASE_FILES = path.resolve(DIR, "files");
 const BASE_PREVIEWS = path.resolve(DIR, "previews");
-const limit = pLimit(2);
+const limit = pLimit(1);
 
 
 async function generateVideoPreview(filePath, outputFolder) {
     await limit(async () => {
         try {
             const RESOLUTIONS = [
-                { name: 'raw', height: 'source', bitrate: '0' },
-                { name: '144p', height: 144, bitrate: '400k' },
-                { name: '240p', height: 240, bitrate: '800k' },
-                { name: '360p', height: 360, bitrate: '1400k' },
-                { name: '480p', height: 480, bitrate: '2500k' },
-                { name: '720p', height: 720, bitrate: '5000k' },
-                { name: '1080p', height: 1080, bitrate: '8000k' },
+                { name: "unedited", height: "source", bitrate: "0" },
+                { name: "360p", height: 360, bitrate: "1400k" },
+                { name: "720p", height: 720, bitrate: "5000k" },
+                { name: "1080p", height: 1080, bitrate: "8000k" },
             ];
             for (const res of RESOLUTIONS) {
                 const resFolder = path.join(outputFolder, res.name);
                 await fsPromises.mkdir(resFolder, { recursive: true });
 
-                const isRaw = res.name === 'raw';
+                const isRaw = res.name === "unedited";
 
                 await new Promise((resolve, reject) => {
                     let cmd = ffmpeg(filePath);
 
                     if (isRaw) {
-                        cmd.outputOptions(['-c', 'copy', '-hls_time', '2', '-hls_list_size', '0', '-f', 'hls']);
+                        cmd.outputOptions(["-c", "copy", "-hls_time", "15", "-hls_list_size", "0", "-f", "hls"]);
                     } else {
                         cmd.outputOptions([
-                            '-vf', `scale=-2:${res.height}`,
-                            '-c:v', 'libx264', '-b:v', res.bitrate,
-                            '-profile:v', 'baseline', '-level', '3.0',
-                            '-hls_time', '2', '-hls_list_size', '0', '-f', 'hls'
+                            "-sws_flags", "fast_bilinear",
+                            "-vf", `scale=-2:${res.height}`,
+                            "-c:v", "libx264", "-b:v", res.bitrate,
+                            "-profile:v", "baseline", "-level", "3.0",
+                            "-hls_time", "15",
+                            "-hls_list_size", "0",
+                            "-f", "hls",
+                            "-preset", "fast",
                         ]);
                     }
 
-                    cmd.output(path.join(resFolder, 'preview.m3u8'))
-                        .on('end', resolve)
-                        .on('error', reject)
+                    cmd.output(path.join(resFolder, "preview.m3u8"))
+                        .on("end", resolve)
+                        .on("error", reject)
                         .run();
                 });
             }
@@ -55,9 +56,9 @@ async function generateVideoPreview(filePath, outputFolder) {
                 ...RESOLUTIONS.map(res =>
                     `#EXT-X-STREAM-INF:BANDWIDTH=${parseInt(res.bitrate) * 1000},RESOLUTION=x${res.height}\n${res.name}/preview.m3u8`
                 )
-            ].join('\n');
+            ].join("\n");
 
-            await fsPromises.writeFile(path.join(outputFolder, 'master.m3u8'), masterContent);
+            await fsPromises.writeFile(path.join(outputFolder, "master.m3u8"), masterContent);
         }
         catch (err) {
             console.log(err);
@@ -76,7 +77,7 @@ async function processAllPreviews() {
     isProcessingPreviews = true;
     console.log(`${getDate()} Processing video files on the server...`);
 
-    const VIDEO_EXTENSIONS = new Set(['.mp4', '.mkv', '.avi', '.mov', '.wmv', '.flv', '.webm']);
+    const VIDEO_EXTENSIONS = new Set([".mp4", ".mkv", ".avi", ".mov", ".wmv", ".flv", ".webm"]);
 
     async function walk(dir) {
         const entries = await fsPromises.readdir(dir, { withFileTypes: true });
