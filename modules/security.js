@@ -1,9 +1,28 @@
-const path = require("path");
 const helmet = require("helmet");
 
 const helmetMiddleware = helmet({
-    contentSecurityPolicy: false,
     crossOriginResourcePolicy: { policy: "cross-origin" },
+    contentSecurityPolicy: {
+        directives: {
+            defaultSrc: ["'self'"],
+            scriptSrc: [
+                "'self'", 
+                "'unsafe-inline'", 
+                "https://*.cloudflareinsights.com",
+            ],
+            scriptSrcAttr: ["'unsafe-inline'"],
+            styleSrc: ["'self'", "'unsafe-inline'"],
+            imgSrc: ["'self'", "data:", "https:"],
+            connectSrc: [
+                "'self'", 
+                "https://cloudflareinsights.com",
+                "https://*.cloudflareinsights.com",
+            ],
+            fontSrc: ["'self'"],
+            objectSrc: ["'none'"],
+            upgradeInsecureRequests: [],
+        },
+    },
 });
 
 module.exports = { helmetMiddleware };

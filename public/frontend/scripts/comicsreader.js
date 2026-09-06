@@ -28,17 +28,63 @@ const switcherElements = [];
             document.querySelector("#comicPath").innerHTML = `<a id="comicBack">↩ ${decodedPath}</a>`;
 
             const comicInfo = await getComicMetadata(comicFullName);
-
+            
             await loadComicImages(comicInfo, comicFullName);
-
+            
         } catch (err) {
+            document.querySelector("#comicHeader").style.display = "none"
+            document.querySelector("#comicFooter").style.display = "none"
             console.error("Error loading comic:", err);
-            document.querySelector("#comicPath").textContent = "Error loading comic content";
+            showErrorFrame("Failed to load comic content. You will be redirected back in 5 seconds.");
         }
     } else {
-        document.querySelector("#comicPath").textContent = "No path provided";
+        document.querySelector("#comicHeader").style.display = "none"
+        document.querySelector("#comicFooter").style.display = "none"
+        showErrorFrame("No comic path provided. You will be redirected back in 5 seconds.");
     }
 })();
+
+function showErrorFrame(message) {
+    const comicContent = document.getElementById("comicContent");
+    if (!comicContent) return;
+
+    let countdown = 5;
+
+    comicContent.innerHTML = `
+        <div class="frame">
+            <div class="frameHeader">
+                <div class="frameBack" id="errorRedirectBtn">↩</div>
+                <div class="frameID">Loading Error</div>
+            </div>
+            <div class="frameText" style="margin-top: 16px;">
+                ${message} <br>
+                Redirecting in <span id="countdownTimer">${countdown}</span> seconds...
+            </div>
+        </div>
+    `;
+
+    const redirect = () => {
+        if (window.history.length > 1) {
+            history.back();
+        } else {
+            window.location.href = "/"; // Fallback URL if no history exists
+        }
+    };
+
+    document.getElementById("errorRedirectBtn").addEventListener("click", redirect);
+
+    const timerInterval = setInterval(() => {
+        countdown--;
+        const timerEl = document.getElementById("countdownTimer");
+        if (timerEl) {
+            timerEl.textContent = countdown;
+        }
+        if (countdown <= 0) {
+            clearInterval(timerInterval);
+            redirect();
+        }
+    }, 1000);
+}
 
 async function getComicMetadata(url) {
     try {
@@ -143,11 +189,12 @@ async function loadComicImages(data, url) {
 
         if (comicData.fullname) {
             document.getElementById("comicFullName").textContent = comicData.fullname;
-            document.querySelector("title").textContent = `Reading ${comicData.fullname} | Yandere's Database`;
+            document.querySelector("title").textContent = `Reading ${comicData.fullname} | Vanilla's Vault`;
         }
 
     } catch (error) {
         console.error("Error processing comic:", error);
+        showErrorFrame("Error processing comic content. You will be redirected back in 5 seconds.");
     }
 }
 
@@ -234,12 +281,13 @@ window.addEventListener("keydown", (e) => {
 });
 
 document.addEventListener("DOMContentLoaded", () => {
-    document.querySelector("#comicBack").addEventListener("click", () => {
-        history.back();
-    });
+    const backBtn = document.querySelector("#comicBack");
+    if (backBtn) {
+        backBtn.addEventListener("click", () => {
+            history.back();
+        });
+    }
 });
-
-
 
 if (pageInput) {
     pageInput.addEventListener("keydown", (e) => {
