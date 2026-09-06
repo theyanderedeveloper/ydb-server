@@ -63,14 +63,19 @@ app.use(express.static(PUBLIC_DIR, { extensions: publicExtensions }));
 
 app.use("/download", (req, res, next) => {
     const targetBase = getTargetBase(req.query.type);
-        const safePath = path.join(targetBase, req.path);
     
+    const decodedPath = decodeURIComponent(req.path);
+    const safePath = path.join(targetBase, decodedPath);
+    
+    if (!safePath.startsWith(targetBase)) {
+        return res.status(403).end();
+    }
+
     res.sendFile(safePath, (err) => {
         if (err) {
             next();
         }
     });
-    console.log(safePath)
 });
 
 
