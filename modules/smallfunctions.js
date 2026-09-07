@@ -11,6 +11,13 @@ function getDate() {
     return `[${new Date().toLocaleString()}]`;
 }
 
+const formatBytes = (bytes) => {
+    if (!bytes || bytes === 0) return "0B";
+    const sizes = ["B", "KB", "MB", "GB", "TB"];
+    const i = Math.floor(Math.log(bytes) / Math.log(1024));
+    return `${(bytes / Math.pow(1024, i)).toFixed(i === 0 ? 0 : 2)}${sizes[i]}`;
+}
+
 async function isSafeToProcess(filePath) {
     try {
         const metadata = await ffprobe(filePath);
@@ -72,4 +79,4 @@ function getAllExtensions(dir, extensionsSet = new Set()) {
     return Array.from(extensionsSet);
 }
 
-module.exports = { isSafeToProcess, getTargetBase, getDate, getSafePath, getLocalIP, getAllExtensions };
+module.exports = { isSafeToProcess, getTargetBase, getDate, getSafePath, getLocalIP, getAllExtensions, formatBytes };

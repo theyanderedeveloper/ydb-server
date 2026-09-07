@@ -45,11 +45,13 @@ export function handleSort(key) {
 
 window.handleSort = handleSort;
 
-export async function fetchFiles(path = "") {
+export async function fetchFiles(path = "", pushToHistory = true) {
     const isDirectFile = /\.[a-zA-Z0-9]{2,5}$/.test(path);
     const fetchPath = isDirectFile && path.includes("/") ? path.substring(0, path.lastIndexOf("/")) : (isDirectFile ? "" : path);
 
-    window.history.pushState({ path }, "", path ? `/search/files/${path}` : "/search/files");
+    if (pushToHistory) {
+        window.history.pushState({ path }, "", path ? `/search/files/${path}` : "/search/files");
+    }
 
     const storageKey = `files_${fetchPath || "root"}`;
     const cachedData = localStorage.getItem(storageKey);
@@ -79,7 +81,6 @@ export async function fetchFiles(path = "") {
         }
     }
 }
-
 function createItemElement(item) {
     const div = document.createElement("div");
     div.className = item.type === "dir" ? "folder" : "file";

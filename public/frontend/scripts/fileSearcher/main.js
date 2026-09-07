@@ -7,7 +7,7 @@ const getCleanPath = () => window.location.pathname.replace(/^\/search\/files\/?
 
 window.addEventListener("popstate", (e) => {
     const path = e.state?.path || getCleanPath();
-    (isFile(path) ? showPreview : fetchFiles)(path);
+    (isFile(path) ? showPreview : fetchFiles)(path, false);
 });
 
 document.addEventListener("DOMContentLoaded", async () => {
