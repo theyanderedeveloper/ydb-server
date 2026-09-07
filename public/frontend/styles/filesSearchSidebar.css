@@ -1,6 +1,3 @@
-/* ==========================================================================
-   SIDEBAR & FILE MANAGER LAYOUT
-   ========================================================================== */
 #sidebar {
     position: relative;
     display: flex;
@@ -22,6 +19,8 @@
     z-index: 20;
     transition: var(--transition-smooth);
     user-select: none;
+    flex-shrink: 0;
+    align-self: stretch;
 }
 
 #resizer:hover,

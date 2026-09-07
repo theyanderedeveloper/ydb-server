@@ -60,9 +60,9 @@ const targetWindowResizeWidthChange = () => {
 
 window.addEventListener("resize", targetWindowResizeWidthChange);
 
-document.addEventListener('DOMContentLoaded', () => {
-    
-    document.querySelectorAll("a.frameBack").forEach((e) => {
+document.addEventListener('DOMContentLoaded', async () => {
+
+    document.querySelectorAll(".frameBack").forEach((e) => {
         e.addEventListener("click", () => {
             history.back();
         });
@@ -99,19 +99,25 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const resizer = el("resizer");
     if (resizer) {
+        const touchOptions = { passive: false };
+
         resizer.addEventListener("mousedown", (e) => {
             e.preventDefault();
             State.isResizing = true;
             document.body.classList.add("resizing-active");
 
+            const onMouseMove = (moveEvent) => {
+                targetWidthChange(moveEvent);
+            };
+
             const onMouseUp = () => {
                 State.isResizing = false;
                 document.body.classList.remove("resizing-active");
-                document.removeEventListener("mousemove", targetWidthChange);
+                document.removeEventListener("mousemove", onMouseMove);
                 document.removeEventListener("mouseup", onMouseUp);
             };
 
-            document.addEventListener("mousemove", targetWidthChange);
+            document.addEventListener("mousemove", onMouseMove);
             document.addEventListener("mouseup", onMouseUp);
 
             if (!State.animationFrameId) {
@@ -119,28 +125,55 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
-        resizer.addEventListener(
-            "touchstart",
-            (e) => {
-                State.isResizing = true;
-                document.body.classList.add("resizing-active");
+        resizer.addEventListener("touchstart", (e) => {
+            State.isResizing = true;
+            document.body.classList.add("resizing-active");
 
-                const onTouchEnd = () => {
-                    State.isResizing = false;
-                    document.body.classList.remove("resizing-active");
-                    document.removeEventListener("touchmove", targetWidthChange);
-                    document.removeEventListener("touchend", onTouchEnd);
-                };
+            const onTouchMove = (moveEvent) => {
+                if (moveEvent.cancelable) moveEvent.preventDefault();
+                targetWidthChange(moveEvent);
+            };
 
-                document.addEventListener("touchmove", targetWidthChange, { passive: false });
-                document.addEventListener("touchend", onTouchEnd);
+            const onTouchEnd = () => {
+                State.isResizing = false;
+                document.body.classList.remove("resizing-active");
+                document.removeEventListener("touchmove", onTouchMove, touchOptions);
+                document.removeEventListener("touchend", onTouchEnd);
+            };
 
-                if (!State.animationFrameId) {
-                    State.animationFrameId = requestAnimationFrame(updateSidebarWidth);
+            document.addEventListener("touchmove", onTouchMove, touchOptions);
+            document.addEventListener("touchend", onTouchEnd);
+
+            if (!State.animationFrameId) {
+                State.animationFrameId = requestAnimationFrame(updateSidebarWidth);
+            }
+        }, { passive: true });
+    }
+
+    const quoteCache = {};
+    const elements = document.querySelectorAll(".quoteRandom");
+
+    for (const quP of elements) {
+        const category = quP.dataset.quote || "default";
+
+        try {
+            if (!quoteCache[category]) {
+                const response = await fetch(`/resources/quotes/${category}.json`);
+                if (!response.ok) {
+                    quoteCache[category] = ["Error while loading a quote... :("]
                 }
-            },
-            { passive: true },
-        );
+                else {
+                    quoteCache[category] = await response.json();
+                }
+            }
+
+            const quoteList = quoteCache[category];
+            if (quoteList && quoteList.length > 0) {
+                quP.innerHTML = quoteList[Math.floor(Math.random() * quoteList.length)];
+            }
+        } catch (error) {
+            console.error(`Could not load quotes for category: ${category}`, error);
+        }
     }
 });
 
@@ -188,12 +221,11 @@ function handleErrorResponse(status, context) {
         404: { title: "Not found", msg: `The requested item "${context}" does not exist.` },
         403: { title: "Forbidden", msg: "You do not have permission to access this resource." },
         416: { title: "Range error", msg: "The server couldn't stream the requested file chunk." },
-        429: { title: "Too many requests", msg: "The server temporarily blocked your requests." },
         500: { title: "Server error", msg: "The server encountered an internal glitch." },
     };
 
     const error = errorMap[status] || { title: "UNKNOWN_ERROR", msg: "An unexpected error occurred." };
-    
+
     renderError(status, error.title, error.msg);
 
     const previewEl = el("preview");
@@ -201,8 +233,8 @@ function handleErrorResponse(status, context) {
         const header = document.createElement("div");
         header.className = "preview-header";
         header.innerHTML = `<button onclick="closePreview()" class="preview-close-btn" title="Close preview">✕</button>`;
-        
-        previewEl.style.position = "relative"; 
+
+        previewEl.style.position = "relative";
         previewEl.insertBefore(header, previewEl.firstChild);
     }
 }

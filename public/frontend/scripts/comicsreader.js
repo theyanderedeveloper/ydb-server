@@ -67,7 +67,7 @@ function showErrorFrame(message) {
         if (window.history.length > 1) {
             history.back();
         } else {
-            window.location.href = "/"; // Fallback URL if no history exists
+            window.location.href = "/";
         }
     };
 
