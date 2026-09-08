@@ -1,6 +1,8 @@
 const queryParams = new URLSearchParams(window.location.search);
 const comicFullName = queryParams.get("path");
-let currentPageIndex = parseInt(queryParams.get("page"), 10) || 0;
+
+let parsedPage = parseInt(queryParams.get("page"), 10);
+let currentPageIndex = (!isNaN(parsedPage) && parsedPage > 0) ? parsedPage - 1 : 0;
 let comicData;
 
 const pageInput = document.querySelector("#comicPageInput");
@@ -28,9 +30,9 @@ const switcherElements = [];
             document.querySelector("#comicPath").innerHTML = `<a id="comicBack">↩ ${decodedPath}</a>`;
 
             const comicInfo = await getComicMetadata(comicFullName);
-            
+
             await loadComicImages(comicInfo, comicFullName);
-            
+
         } catch (err) {
             document.querySelector("#comicHeader").style.display = "none"
             document.querySelector("#comicFooter").style.display = "none"
@@ -43,6 +45,15 @@ const switcherElements = [];
         showErrorFrame("No comic path provided. You will be redirected back in 5 seconds.");
     }
 })();
+
+function updateUrlPageParam(pageIndex) {
+    const queryParams = new URLSearchParams(window.location.search);
+    queryParams.set("page", pageIndex + 1);
+
+    const newRelativePathQuery = window.location.pathname + '?' + queryParams.toString();
+    history.replaceState(null, '', newRelativePathQuery);
+}
+
 
 function showErrorFrame(message) {
     const comicContent = document.getElementById("comicContent");
@@ -89,7 +100,7 @@ function showErrorFrame(message) {
 async function getComicMetadata(url) {
     try {
         const safePath = encodeURIComponent(url);
-        const response = await fetch(`/download/${safePath}/comic.json?type=creader`);
+        const response = await fetch(`/download/${safePath}/comic.json?type=cr`);
 
         if (!response.ok) {
             throw new Error(`Failed to fetch comic.json: ${response.status} ${response.statusText}`);
@@ -139,7 +150,7 @@ async function loadComicImages(data, url) {
         for (let i = 0; i < imageFilenames.length; i++) {
             const targetImageName = imageFilenames[i];
 
-            const imageUrl = `/download/${safePath}/${encodeURIComponent(targetImageName)}?type=creader&v=${Date.now()}`;
+            const imageUrl = `/download/${safePath}/${encodeURIComponent(targetImageName)}?type=comicreaderdecompressed`; // remove &v={date}, as it was added for debug in the past
 
             const imgElement = document.createElement("img");
             imgElement.src = imageUrl;
@@ -228,7 +239,7 @@ function switchPage(index) {
 
     const goingForward = index > currentPageIndex;
     const distance = Math.abs(index - currentPageIndex);
-    
+
     const baseDelay = distance >= 100 ? 0 : 0.25;
 
     switcherElements.forEach((element, i) => {
@@ -252,10 +263,12 @@ function switchPage(index) {
     });
 
     switcherElements[index].scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
-    
+
     pageInput.value = index + 1;
 
     currentPageIndex = index;
+
+    updateUrlPageParam(currentPageIndex);
 }
 
 document.querySelector("#comicPrev").addEventListener("click", (e) => {

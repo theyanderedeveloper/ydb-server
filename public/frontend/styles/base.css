@@ -15,9 +15,10 @@
     --font-sans: system-ui, -apple-system, BlinkMacSystemFont, "SegoeUI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
     --font-mono: "FiraCode", SFMono-Regular, Consolas, "LiberationMono", Menlo, monospace;
 
-    --bg-main: #0f1117;
-    --bg-surface: #181b25;
-    --bg-code: #12141c;
+    --bg-body: #0f1117;
+    --bg-main: #0f111770;
+    --bg-surface: #181b2570;
+    --bg-code: #12141c70;
     --border-subtle: rgba(255, 255, 255, 0.08);
 
     --text-primary: #f3f4f6;
@@ -43,7 +44,7 @@ body {
     align-items: center;
     min-height: 100vh;
     font-family: var(--font-sans);
-    background-color: var(--bg-main);
+    background-color: var(--bg-body);
     color: var(--text-primary);
     line-height: 1.5;
     -webkit-font-smoothing: antialiased;

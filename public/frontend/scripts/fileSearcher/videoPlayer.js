@@ -25,7 +25,7 @@ export const loadVideo = (filePath, res = "720p", startTime = 0) => {
         load(context, config, callbacks) {
             if (/\.(ts|m4s)(\?.*)?$/i.test(context.url)) {
                 const fileName = context.url.split("/").pop().split("?")[0];
-                context.url = `${base}${fileName}?type=vidprev`;
+                context.url = `${base}${fileName}?type=videopreviews`;
             }
             super.load(context, config, callbacks);
         }
@@ -33,7 +33,7 @@ export const loadVideo = (filePath, res = "720p", startTime = 0) => {
 
     const hls = new Hls({ fLoader: CustomLoader });
     window.hlsInstance = hls;
-    hls.loadSource(`${base}preview.m3u8?type=vidprev`);
+    hls.loadSource(`${base}preview.m3u8?type=vid`);
     hls.attachMedia(video);
 
     hls.on(Hls.Events.MANIFEST_PARSED, () => {

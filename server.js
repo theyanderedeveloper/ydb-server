@@ -29,9 +29,9 @@ const DATABASE_DIR = path.join(DIR, "public");
 const PUBLIC_DIR = path.join(DATABASE_DIR, "frontend");
 const FILES_DIR = path.join(DATABASE_DIR, "files");
 const COMICS_DIR = path.join(DATABASE_DIR, "comics");
+const BLOGS_DIR = path.join(DATABASE_DIR, "blogs");
 const CPAGES_DIR = path.join(DATABASE_DIR, "cpages");
 const PREVIEWS_DIR = path.join(DATABASE_DIR, "previews");
-const VIEWS_DIR = path.join(DATABASE_DIR, "views");
 
 const publicExtensions = getAllExtensions(PUBLIC_DIR);
 
@@ -44,28 +44,28 @@ app.get("/search/comics*", (req, res) => {
     res.sendFile(path.join(PUBLIC_DIR, "search", "comics.html"));
 });
 
-function getTargetBase(type) {
-    switch (type) {
-        case "comic":
-        case "comics":
-            return COMICS_DIR;
-        case "creader":
-            return CPAGES_DIR;
-        case "vidprev":
-            return PREVIEWS_DIR;
-        default:
-            return FILES_DIR;
-    }
-}
+// Added BLOGS searcher
+app.get("/search/blogs*", (req, res) => {
+    res.sendFile(path.join(PUBLIC_DIR, "search", "blogs.html"));
+});
 
+function getTargetBase(type) {
+    if (type) {
+        if (type.toLowerCase().startsWith("cr") || type.toLowerCase().startsWith("comicr")) return CPAGES_DIR;
+        if (type.toLowerCase().startsWith("co")) return COMICS_DIR;
+        if (type.toLowerCase().startsWith("bl")) return BLOGS_DIR;
+        if (type.toLowerCase().startsWith("vid")) return PREVIEWS_DIR;
+    }
+    return FILES_DIR;
+}
 
 app.use(express.static(PUBLIC_DIR, { extensions: publicExtensions }));
 
 app.get("/download/*", (req, res, next) => {
     const targetBase = getTargetBase(req.query.type);
-    
+
     const rawSubPath = req.params[0] || "";
-    
+
     let decodedPath;
     try {
         decodedPath = decodeURIComponent(rawSubPath);
@@ -74,7 +74,7 @@ app.get("/download/*", (req, res, next) => {
     }
 
     const safePath = path.join(targetBase, decodedPath);
-    
+
     if (!safePath.startsWith(targetBase)) {
         return res.status(403).end();
     }
@@ -85,9 +85,6 @@ app.get("/download/*", (req, res, next) => {
         }
     });
 });
-
-
-app.use("/previews", express.static(PREVIEWS_DIR));
 
 app.use("/list", async (req, res, next) => {
     try {
@@ -134,10 +131,11 @@ app.use((err, req, res, next) => {
 
 async function startServer() {
     await fsPromises.mkdir(PUBLIC_DIR, { recursive: true });
-    await fsPromises.mkdir(path.join(PUBLIC_DIR, "search"), { recursive: true });
     await fsPromises.mkdir(FILES_DIR, { recursive: true });
     await fsPromises.mkdir(COMICS_DIR, { recursive: true });
     await fsPromises.mkdir(PREVIEWS_DIR, { recursive: true });
+    await fsPromises.mkdir(CPAGES_DIR, { recursive: true });
+    await fsPromises.mkdir(BLOGS_DIR, { recursive: true });
 
     app.listen(PORT, "0.0.0.0", () => {
         console.log(`${getDate()} Server running on port http://${getLocalIP()}:${PORT}`);

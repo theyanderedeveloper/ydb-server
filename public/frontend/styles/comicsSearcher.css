@@ -25,6 +25,9 @@ ul#otherPages {
     list-style: none;
     user-select: none;
     transition: var(--transition-smooth);
+    backdrop-filter:
+        blur(8px);
+
 }
 
 ul#otherPages li {
@@ -53,6 +56,9 @@ ul#otherPages li:hover {
     text-align: center;
     user-select: none;
     transition: var(--transition-smooth);
+    backdrop-filter:
+        blur(8px);
+
 }
 
 #breadcrumb:hover {
@@ -72,6 +78,8 @@ ul#otherPages li:hover {
     height: calc(100vh - 256px);
     gap: 16px;
     grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    backdrop-filter:
+        blur(8px);
 }
 
 .comic,
