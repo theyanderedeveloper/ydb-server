@@ -98,7 +98,6 @@ url:first-of-type {
 url:first-of-type loc::before {
     content: "Target URL";
     display: block;
-    transform: translateY(-38px);
     height: 0;
     font-size: 0.875rem;
     font-weight: 600;
@@ -108,7 +107,6 @@ url:first-of-type loc::before {
 url:first-of-type lastmod::before {
     content: "Last Modified";
     display: block;
-    transform: translateY(-44px);
     height: 0;
     font-size: 0.875rem;
     font-weight: 600;
@@ -119,7 +117,6 @@ url:first-of-type lastmod::before {
 url:first-of-type priority::before {
     content: "Priority";
     display: block;
-    transform: translateY(-44px);
     height: 0;
     font-size: 0.875rem;
     font-weight: 600;

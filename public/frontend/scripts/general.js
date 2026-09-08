@@ -153,27 +153,38 @@ document.addEventListener('DOMContentLoaded', async () => {
     const quoteCache = {};
     const elements = document.querySelectorAll(".quoteRandom");
 
+    const fetchPromises = {};
+
     for (const quP of elements) {
         const category = quP.dataset.quote || "default";
+        const fallbackHTML = quP.innerHTML;
 
-        try {
-            if (!quoteCache[category]) {
-                const response = await fetch(`/resources/quotes/${category}.json`);
-                if (!response.ok) {
-                    quoteCache[category] = ["Error while loading a quote... :("]
-                }
-                else {
-                    quoteCache[category] = await response.json();
-                }
-            }
+        quP.textContent = "Loading...";
 
-            const quoteList = quoteCache[category];
-            if (quoteList && quoteList.length > 0) {
-                quP.innerHTML = quoteList[Math.floor(Math.random() * quoteList.length)];
+        (async () => {
+            try {
+                if (!quoteCache[category]) {
+                    if (!fetchPromises[category]) {
+                        fetchPromises[category] = fetch(`/resources/quotes/${category}.json`)
+                            .then(res => res.ok ? res.json() : ["Error while loading a quote... :("])
+                            .catch(() => ["Error while loading."]);
+                    }
+                    quoteCache[category] = await fetchPromises[category];
+                }
+
+                const quoteList = quoteCache[category];
+                if (quoteList && quoteList.length > 0) {
+                    const randomIndex = Math.floor(Math.random() * quoteList.length);
+                    quP.innerHTML = quoteList[randomIndex];
+                } else {
+                    quP.innerHTML = fallbackHTML;
+                }
+            } catch (error) {
+                console.error(`Could not load quotes for category: ${category}`, error);
+                quP.innerHTML = fallbackHTML;
+            } finally {
             }
-        } catch (error) {
-            console.error(`Could not load quotes for category: ${category}`, error);
-        }
+        })();
     }
 });
 

@@ -61,10 +61,18 @@ function getTargetBase(type) {
 
 app.use(express.static(PUBLIC_DIR, { extensions: publicExtensions }));
 
-app.use("/download", (req, res, next) => {
+app.get("/download/*", (req, res, next) => {
     const targetBase = getTargetBase(req.query.type);
     
-    const decodedPath = decodeURIComponent(req.path);
+    const rawSubPath = req.params[0] || "";
+    
+    let decodedPath;
+    try {
+        decodedPath = decodeURIComponent(rawSubPath);
+    } catch (e) {
+        return res.status(400).end();
+    }
+
     const safePath = path.join(targetBase, decodedPath);
     
     if (!safePath.startsWith(targetBase)) {

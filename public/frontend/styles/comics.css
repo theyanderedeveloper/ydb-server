@@ -21,7 +21,6 @@
     width: 100vw;
     height: 100vh;
     background: var(--bg-main);
-    overflow: hidden;
     display: flex;
     flex-direction: column;
 }
@@ -77,7 +76,6 @@
 }
 
 #comicBack:hover {
-    transform: translateX(-4px);
     color: var(--accent);
 }
 
@@ -94,8 +92,6 @@
     background: var(--bg-code);
     flex: 1;
     width: 100vw;
-    position: relative;
-    overflow: hidden;
 }
 
 .comicPage.active {
@@ -126,7 +122,6 @@
 
 .comicBtn:hover,
 .fullScreen:hover {
-    transform: translateY(-1px);
     background-color: var(--bg-surface);
     border-color: var(--accent);
     color: var(--accent);
@@ -136,7 +131,6 @@
 
 .comicBtn:active,
 .fullScreen:active {
-    transform: translateY(0);
     background-color: var(--bg-main);
 }
 
@@ -164,8 +158,7 @@
     flex: 1;
     min-width: 0;
     max-height: 44px;
-    overflow-x: auto;
-    overflow-y: hidden;
+    overflow: auto hidden;
     background: transparent;
     border: none;
     align-items: center;
@@ -193,7 +186,6 @@
     color: var(--text-secondary);
     border-radius: var(--radius-sm);
     z-index: 5;
-    position: relative;
     cursor: pointer;
     flex-shrink: 0;
     transition: background 0.2s ease, transform 0.2s ease, color 0.2s ease;

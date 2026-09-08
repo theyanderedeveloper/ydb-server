@@ -9,12 +9,12 @@ const DIR = path.resolve(__dirname, "..", "public");
 const BASE_COMICS = path.resolve(DIR, "comics");
 const BASE_PREVIEWS = path.resolve(DIR, "cpages");
 
-const limit = pLimit(2);
+const limit = pLimit(4);
 let isProcessingCPreviews = false;
 
 async function processAllCPreviews() {
     if (isProcessingCPreviews) {
-        console.log(`${getDate()} Previous comic extraction still running. Skipping this interval.`);
+        console.log(`${getDate()} Previous comic extraction still running (how?). Skipping this interval.`);
         return;
     }
 
