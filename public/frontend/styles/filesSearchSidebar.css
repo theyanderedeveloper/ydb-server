@@ -7,7 +7,7 @@
     height: 100vh;
     padding: 16px;
     background: var(--bg-surface);
-    overflow-y: auto;
+    overflow: hidden auto;
     z-index: 10;
     border-right: 1px solid var(--border-subtle);
 }
@@ -63,7 +63,7 @@
     background: rgba(255, 255, 255, 0.01);
     border: 1px solid var(--border-subtle);
     border-radius: var(--radius-lg);
-    overflow-y: auto;
+    overflow: hidden auto;
     list-style: none;
     display: flex;
     flex-direction: column;
@@ -91,7 +91,6 @@
 .file:hover {
     background: rgba(255, 255, 255, 0.05);
     color: var(--text-primary);
-    transform: translateX(2px);
 }
 
 .folder {
@@ -136,7 +135,6 @@
 #otherPages li:hover {
     background: rgba(255, 255, 255, 0.05);
     color: var(--text-primary);
-    transform: translateY(-1px);
 }
 
 #breadcrumb {
@@ -149,9 +147,9 @@
     font-size: 12px;
     color: var(--text-secondary);
     cursor: pointer;
-    overflow: hidden;
+    overflow: auto;
     white-space: nowrap;
-    text-overflow: ellipsis;
+    text-overflow: clip;
     text-align: center;
     user-select: none;
     transition: var(--transition-smooth);
@@ -200,7 +198,6 @@
 .sort-btn:hover {
     background: rgba(255, 255, 255, 0.05);
     color: var(--text-primary);
-    transform: translateY(-1px);
 }
 
 .sort-btn.active {
