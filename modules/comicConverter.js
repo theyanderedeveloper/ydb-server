@@ -24,11 +24,16 @@ async function processAllCPreviews() {
     async function walk(dir) {
         const entries = await fsPromises.readdir(dir, { withFileTypes: true });
         for (const entry of entries) {
+            // Added a condition to fix errors, now that the ComicSearcher has custom styles of a page
+            if (!entry.isDirectory() && entry.name === "style.css") {
+                continue;
+            }
+
             const fullPath = path.join(dir, entry.name);
 
             if (entry.isDirectory()) {
-                await walk(fullPath);
-            } else {
+                await walk(fullPath);}
+            else {
                 try {
                     const relativePath = path.relative(BASE_COMICS, fullPath);
                     const parsed = path.parse(relativePath);

@@ -26,7 +26,7 @@ async function fetchComics(path = "", push = true) {
     }
 
     try {
-        const url = `/list?type=comic&path=${encodeURIComponent(cleanPath)}`;
+        const url = `/list?type=comic_zip&path=${encodeURIComponent(cleanPath)}`;
         const response = await fetch(url);
 
         if (response.status === 404) {
@@ -110,7 +110,7 @@ function renderList(items, path, push = true) {
             parts.pop();
             fetchComics(parts.join("/"));
         };
-        fragment.appendChild(upDiv);
+        comicList.appendChild(upDiv)
     }
 
     items.forEach((item) => {
@@ -127,10 +127,22 @@ function renderList(items, path, push = true) {
                 showPreview(item.path);
             }
         };
-        fragment.appendChild(div);
+        if (item.name !== "style.css") fragment.appendChild(div);
     });
 
     comicList.appendChild(fragment);
+
+    document.querySelectorAll(".customComicSearchCSS").forEach((el) => {
+        el.remove()
+    })
+
+    let customComicSearchStyle = document.createElement("link")
+    customComicSearchStyle.rel = "stylesheet";
+    let cleanStylePath = path ? (path.startsWith("/") ? path : `/${path}`) : "";
+    customComicSearchStyle.href = `/download${cleanStylePath}/style.css?type=comicStyle`;
+    customComicSearchStyle.classList.add("customComicSearchCSS")
+
+    document.querySelector("head").appendChild(customComicSearchStyle)
 }
 
 window.addEventListener("popstate", (e) => {
