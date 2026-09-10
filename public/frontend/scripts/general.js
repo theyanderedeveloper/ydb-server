@@ -1,5 +1,7 @@
 const lerpFactor = 0.1;
 
+let language = localStorage.getItem("language") || "en_us"
+
 const State = {
     isResizing: false,
     targetWidth: 250,
@@ -155,9 +157,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     const fetchPromises = {};
 
+
     for (const quP of elements) {
         const category = quP.dataset.quote || "default";
-        const fallbackHTML = quP.innerHTML;
 
         quP.textContent = "Loading...";
 
@@ -165,23 +167,24 @@ document.addEventListener('DOMContentLoaded', async () => {
             try {
                 if (!quoteCache[category]) {
                     if (!fetchPromises[category]) {
-                        fetchPromises[category] = fetch(`/resources/quotes/${category}.json`)
-                            .then(res => res.ok ? res.json() : ["Error while loading a quote... :("])
-                            .catch(() => ["Error while loading."]);
+                        fetchPromises[category] = fetch(`/resources/quotes/${language}/${category}.json`)
+                            .then(res => res.ok ? res.json() : null)
+                            .catch(() => null);
                     }
                     quoteCache[category] = await fetchPromises[category];
                 }
 
                 const quoteList = quoteCache[category];
-                if (quoteList && quoteList.length > 0) {
+                if (Array.isArray(quoteList) && quoteList.length > 0) {
                     const randomIndex = Math.floor(Math.random() * quoteList.length);
-                    quP.innerHTML = quoteList[randomIndex];
+                    const item = quoteList[randomIndex];
+                    quP.innerHTML = typeof item === 'object' && item !== null ? item.text : item;
                 } else {
-                    quP.innerHTML = fallbackHTML;
+                    quP.remove();
                 }
             } catch (error) {
                 console.error(`Could not load quotes for category: ${category}`, error);
-                quP.innerHTML = fallbackHTML;
+                quP.remove();
             } finally {
             }
         })();

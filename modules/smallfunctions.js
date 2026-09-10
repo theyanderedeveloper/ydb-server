@@ -74,6 +74,7 @@ function getAllExtensions(dir, extensionsSet = new Set()) {
                 if (ext) extensionsSet.add(ext);
             }
         }
+    extensionsSet.add("css")
     } catch {
     }
     return Array.from(extensionsSet);

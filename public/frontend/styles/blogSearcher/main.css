@@ -66,13 +66,13 @@ ul#otherPages li:hover {
     color: var(--text-primary);
 }
 
-#comic-list {
-    display: grid;
+#blog-list {
+    display: flex;
+    flex-direction: column;
     padding: 16px;
     background: var(--bg-surface);
     border: 1px solid var(--border-subtle);
     border-radius: var(--radius-lg);
-    grid-auto-rows: 120px;
     overflow: hidden auto;
     max-height: calc(100vh - 256px);
     height: calc(100vh - 256px);
@@ -82,7 +82,7 @@ ul#otherPages li:hover {
         blur(8px);
 }
 
-.comic,
+.blog,
 .folder {
     background: rgba(255, 255, 255, 0.02);
     border: 1px solid var(--border-subtle);
@@ -101,7 +101,7 @@ ul#otherPages li:hover {
     cursor: pointer;
 }
 
-.comic .icon,
+.blog .icon,
 .folder .icon {
     flex-shrink: 0;
     flex-grow: 0;
@@ -111,14 +111,33 @@ ul#otherPages li:hover {
 }
 
 .folder:hover,
-.comic:hover {
+.blog:hover {
     background: rgba(255, 255, 255, 0.05);
     border-color: var(--accent);
     box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
 }
 
 .folder:hover .icon,
-.comic:hover .icon {
+.blog:hover .icon {
     opacity: 1;
     color: var(--accent);
+}
+
+video.customBlogSearchVideo {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: -99999;
+    object-fit: cover;
+    
+}
+
+.bg-canvas {
+    position: fixed;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+    z-index: -9999;
 }
