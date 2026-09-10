@@ -1,0 +1,196 @@
+@import url("/styles/base/frames");
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    outline: 0;
+    list-style: none;
+    color: var(--text-secondary);
+    text-decoration: none;
+}
+
+:root {
+    --font-sans: system-ui, -apple-system, BlinkMacSystemFont, "SegoeUI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    --font-mono: "FiraCode", SFMono-Regular, Consolas, "LiberationMono", Menlo, monospace;
+
+    --bg-body: #0f1117;
+    --bg-main: #0f111770;
+    --bg-surface: #181b2570;
+    --bg-code: #12141c70;
+    --border-subtle: rgba(255, 255, 255, 0.08);
+
+    --text-primary: #f3f4f6;
+    --text-secondary: #9ca3af;
+
+    --accent: #6366f1;
+    --accent-hover: #4f46e5;
+    --accent-glow: rgba(99, 102, 241, 0.25);
+
+    --radius-sm: 6px;
+    --radius-md: 12px;
+    --radius-lg: 16px;
+
+    --transition-smooth: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+
+    --quote: #bec5cf;
+    --quote-hover: #dfe7ef;
+}
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    font-family: var(--font-sans);
+    background-color: var(--bg-body);
+    color: var(--text-primary);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+}
+
+a:not(.quoteRandom a):not(.download-button) {
+    color: var(--accent);
+    font-weight: 500;
+    transition: var(--transition-smooth);
+}
+
+a:not(.quoteRandom a):not(.download-button):hover {
+    color: var(--accent-hover);
+}
+
+img {
+    width: 32px;
+    height: 32px;
+    border-radius: var(--radius-sm);
+    object-fit: cover;
+}
+
+pre {
+    padding: 20px;
+    background: var(--bg-code);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+    font-family: var(--font-mono);
+    font-size: 13px;
+    line-height: 1.6;
+    overflow-x: auto;
+    color: var(--text-primary);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+}
+
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 9999px;
+    transition: var(--transition-smooth);
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px20px;
+    background: var(--accent);
+    color: #ffffff;
+    font-family: var(--font-sans);
+    font-weight: 500;
+    font-size: 14px;
+    border-radius: var(--radius-sm);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    user-select: none;
+    transition: var(--transition-smooth);
+}
+
+.button:hover {
+    background: var(--accent-hover);
+    box-shadow: 0 4px 12px var(--accent-glow);
+}
+
+.button:active {
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+h1 {
+    font-size: 60px;
+}
+
+h2 {
+    font-size: 36px;
+}
+
+h3 {
+    font-size: 30px;
+}
+
+h4 {
+    font-size: 24px;
+}
+
+h5 {
+    font-size: 18px;
+}
+
+h6 {
+    font-size: 12px;
+}
+
+
+.quoteRandom {
+    padding: 24px 32px 24px 28px;
+    background: var(--bg-surface);
+    border: 1px solid var(--border-subtle);
+    border-left: 4px solid var(--accent);
+    border-radius: var(--radius-md);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+    font-size: 18px;
+    font-weight: 400;
+    line-height: 1.6;
+    color: var(--text-primary);
+    overflow-wrap: break-word;
+    hyphens: auto;
+    text-wrap: normal;
+    transition: var(--transition-smooth);
+
+}
+
+.quoteRandom:hover {
+    border-color: rgba(255, 255, 255, 0.15);
+    border-left-color: var(--accent-hover);
+}
+
+.quoteRandom a {
+    font-style: normal;
+    color: var(--quote);
+    transition: var(--transition-smooth);
+    white-space: normal;
+    overflow-wrap: break-word;
+    word-break: break-word;
+}

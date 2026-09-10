@@ -4,41 +4,42 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Search comics | Vanilla's Vault</title>
+  <title>Search blogs | Vanilla's Vault</title>
   <link rel="icon" type="image/x-icon" href="/favicon">
-  <link rel="canonical" href="https://database.theyandere.dev/search/comics" />
+  <link rel="canonical" href="https://database.theyandere.dev/search/blogs" />
 
   <meta property="og:type" content="website">
-  <meta property="og:url" content="https://database.theyandere.dev/search/comics">
-  <meta property="og:title" content="Search comics | Vanilla's Vault">
-  <meta property="og:description" content="Search comics saved and listed in Vanilla's Vault.">
+  <meta property="og:url" content="https://database.theyandere.dev/search/blogs">
+  <meta property="og:title" content="Search blogs | Vanilla's Vault">
+  <meta property="og:description" content="Search blogs saved and listed in Vanilla's Vault.">
   <meta property="og:image" content="/resources/media/logos/nexussysdev_old">
 
   <meta name="twitter:card" content="summary">
-  <meta property="twitter:url" content="https://database.theyandere.dev/search/comics">
-  <meta property="twitter:title" content="Search comics | Vanilla's Vault">
-  <meta property="twitter:description" content="Search comics saved and listed in Vanilla's Vault.">
+  <meta property="twitter:url" content="https://database.theyandere.dev/search/blogs">
+  <meta property="twitter:title" content="Search blogs | Vanilla's Vault">
+  <meta property="twitter:description" content="Search blogs saved and listed in Vanilla's Vault.">
 
-  <link rel="stylesheet" href="/styles/base" />
-  <link rel="stylesheet" href="/styles/frames" />
-  <link rel="stylesheet" href="/styles/previews" />
-  <link rel="stylesheet" href="/styles/comicsSearcher" />
+  <link rel="stylesheet" href="/styles/base/main" />
+  <link rel="stylesheet" href="/styles/blogSearcher/main" />
 </head>
 
 <body>
     <ul id="otherPages">
-      <li><a href="/search/comics">Comics</a></li>
       <li><a href="/search/files">Files</a></li>
+      <li><a href="/search/comics">Comics</a></li>
+      <li><a href="/search/blogs">Blogs</a></li>
       <li><a href="/">Main page</a></li>
     </ul>
     <div id="breadcrumb"></div>
 
     </div>
-    <div id="comic-list"></div>
+
+    <div id="blog-list"></div>
 
     <script src="/scripts/lib/marked"></script>
+
     <script src="/scripts/general"></script>
-    <script src="/scripts/comics"></script>
+    <script src="/scripts/blogSearcher/main" type="module"></script>
 </body>
 
 

@@ -44,7 +44,6 @@ app.get("/search/comics*", (req, res) => {
     res.sendFile(path.join(PUBLIC_DIR, "search", "comics.html"));
 });
 
-// Added BLOGS searcher
 app.get("/search/blogs*", (req, res) => {
     res.sendFile(path.join(PUBLIC_DIR, "search", "blogs.html"));
 });

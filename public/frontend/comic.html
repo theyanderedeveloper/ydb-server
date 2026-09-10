@@ -2,51 +2,50 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Reading comic | Vanilla's Vault</title>
-    <link rel="icon" type="image/x-icon" href="/favicon">
-    <link rel="canonical" href="https://database.theyandere.dev/comics" />
-    
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://database.theyandere.dev/comics">
-    <meta property="og:title" content="Reading comic | Vanilla's Vault">
-    <meta property="og:description" content="A comprehensive digital database featuring files, comics, and community social hubs.">
-    <meta property="og:image" content="/resources/media/logos/nexussysdev_old">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Reading comic | Vanilla's Vault</title>
+  <link rel="icon" type="image/x-icon" href="/favicon">
+  <link rel="canonical" href="https://database.theyandere.dev/comics" />
 
-    <meta name="twitter:card" content="summary">
-    <meta property="twitter:url" content="https://database.theyandere.dev/comics">
-    <meta property="twitter:title" content="Reading comic | Vanilla's Vault">
-    <meta property="twitter:description" content="A comprehensive digital database featuring files, comics, and community social hubs.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://database.theyandere.dev/comics">
+  <meta property="og:title" content="Reading comic | Vanilla's Vault">
+  <meta property="og:description" content="A comprehensive digital database featuring files, comics, and community social hubs.">
+  <meta property="og:image" content="/resources/media/logos/nexussysdev_old">
 
-    <link rel="stylesheet" href="/styles/base" />
-    <link rel="stylesheet" href="/styles/comics" />
-    <link rel="stylesheet" href="/styles/frames" />
+  <meta name="twitter:card" content="summary">
+  <meta property="twitter:url" content="https://database.theyandere.dev/comics">
+  <meta property="twitter:title" content="Reading comic | Vanilla's Vault">
+  <meta property="twitter:description" content="A comprehensive digital database featuring files, comics, and community social hubs.">
+
+  <link rel="stylesheet" href="/styles/base/main" />
+  <link rel="stylesheet" href="/styles/comicReader/main" />
 </head>
 
 <body>
-    <div id="comicReaderMain">
-        <div id="comicHeader">
-            <div id="comicPath"></div>
-            <div id="comicFullName"></div>
-            <div id="comicDescription"></div>
-        </div>
-        <div id="comicContent">
-        </div>
-        <div id="comicFooter">
-            <div id="comicPagesSelector">
-            </div>
-
-            <div id="comicControls">
-                <input type="number" id="comicPageInput" placeholder="Enter the page">  
-                <div id="comicPrev" class="comicBtn">⮜</div>
-                <div id="comicNext" class="comicBtn">⮞</div>
-                <div class="fullScreen" data-target="#comicReaderMain">⛶</div>
-            </div>
-        </div>
+  <div id="comicReaderMain">
+    <div id="comicHeader">
+      <div id="comicPath"></div>
+      <div id="comicFullName"></div>
+      <div id="comicDescription"></div>
     </div>
-    <script src="/scripts/general"></script>
-    <script src="/scripts/comicsreader"></script>
+    <div id="comicContent">
+    </div>
+    <div id="comicFooter">
+      <div id="comicPagesSelector">
+      </div>
+
+      <div id="comicControls">
+        <input type="number" id="comicPageInput" placeholder="Enter the page">
+        <div id="comicPrev" class="comicBtn">⮜</div>
+        <div id="comicNext" class="comicBtn">⮞</div>
+        <div class="fullScreen" data-target="#comicReaderMain">⛶</div>
+      </div>
+    </div>
+  </div>
+  <script src="/scripts/general"></script>
+  <script src="/scripts/comicReader/main" type="module"></script>
 </body>
 
 </html>
