@@ -6,8 +6,8 @@ export const FileManConfig = {
     sortOrder: "asc",
 };
 
-export let iconMap = {};
-export let EXT = { 
+export var iconMap = {};
+export var EXT = { 
     image: new Set(), 
     video: new Set(), 
     audio: new Set(), 

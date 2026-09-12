@@ -1,5 +1,5 @@
-import { FileManConfig } from "/scripts/fileSearcher/config";
-import { el, escapeHTML, getIcon, formatBytes, formatDate } from "/scripts/fileSearcher/utils";
+import { FileManConfig, iconMap } from "/scripts/fileSearcher/config";
+import { el, formatBytes, formatDate, escapeHTML } from "/scripts/general/utils";
 import { showPreview } from "/scripts/fileSearcher/previewManager";
 
 const PROPERTY_MAP = { atime: "createdAt", mtime: "updatedAt", size: "size" };
@@ -98,11 +98,12 @@ function createItemElement(item) {
         }
     }
 
-    div.innerHTML = `<span class="icon">${getIcon(item)}</span>${escapeHTML(item.name)}${metaString}`;
+    const icon = item.type === "dir" ? "📁" : (iconMap[item.name.split(".").pop().toLowerCase()] || "❓");
+
+    div.innerHTML = `<span class="icon">${icon}</span>${escapeHTML(item.name)}${metaString}`;
     div.onclick = () => item.type === "dir" ? fetchFiles(item.path) : showPreview(item.path);
     return div;
 }
-
 export function renderList(items, path) {
     FileManConfig.currentPath = path;
     const fileList = el("file-list");
@@ -124,10 +125,17 @@ export function renderList(items, path) {
         fragment.appendChild(upDiv);
     }
 
-    sortItems(items).forEach(item => fragment.appendChild(createItemElement(item)));
+    sortItems(items).forEach(item => {
+        const element = createItemElement(item);
+        if (element instanceof Node) {
+            fragment.appendChild(element);
+        } else {
+            console.warn("createItemElement did not return a valid DOM node for item:", item);
+        }
+    });
+
     fileList.appendChild(fragment);
 }
-
 export function renderBreadcrumbs(path) {
     const container = el("breadcrumb");
     if (!container) return;

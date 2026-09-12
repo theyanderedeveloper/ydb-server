@@ -1,124 +1,42 @@
 const express = require("express");
 const fsPromises = require("fs/promises");
 const path = require("path");
-const fs = require("fs");
 
-const { requestLogger } = require("./modules/logger");
 const { helmetMiddleware } = require("./modules/security");
+const { requestLogger } = require("./modules/logger");
+const { getDate, getLocalIP, getAllExtensions,
+    PUBLIC_DIR, FILES_DIR, COMICS_DIR, BLOGS_DIR, CPAGES_DIR,
+    PREVIEWS_DIR, DIR } = require("./modules/smallfunctions");
 const { processAllPreviews } = require("./modules/mediaConverters");
-const { getDate, getLocalIP, getAllExtensions } = require("./modules/smallfunctions");
-const { getDirectoryItems } = require("./modules/list");
 const { processAllCPreviews } = require("./modules/comicConverter");
-
+const { downloadApi, listApi } = require("./modules/apis");
 
 const app = express();
-const PORT = 8645;
+const PORT = process.env.PORT || 8645;
 
 app.disable("x-powered-by");
 app.use(helmetMiddleware);
 app.set("trust proxy", 1);
 
-app.use(requestLogger)
-
+app.use(requestLogger);
 app.use(express.urlencoded({ extended: true }));
 
+const publicExtensions = getAllExtensions(DIR);
 
-const DIR = __dirname;
-
-const DATABASE_DIR = path.join(DIR, "public");
-const PUBLIC_DIR = path.join(DATABASE_DIR, "frontend");
-const FILES_DIR = path.join(DATABASE_DIR, "files");
-const COMICS_DIR = path.join(DATABASE_DIR, "comics");
-const BLOGS_DIR = path.join(DATABASE_DIR, "blogs");
-const CPAGES_DIR = path.join(DATABASE_DIR, "cpages");
-const PREVIEWS_DIR = path.join(DATABASE_DIR, "previews");
-
-const publicExtensions = getAllExtensions(PUBLIC_DIR);
-
-
-app.get("/search/files*", (req, res) => {
-    res.sendFile(path.join(PUBLIC_DIR, "search", "files.html"));
-});
-
-app.get("/search/comics*", (req, res) => {
-    res.sendFile(path.join(PUBLIC_DIR, "search", "comics.html"));
-});
-
-app.get("/search/blogs*", (req, res) => {
-    res.sendFile(path.join(PUBLIC_DIR, "search", "blogs.html"));
-});
-
-function getTargetBase(type) {
-    if (type) {
-        if (type.toLowerCase().startsWith("cr") || type.toLowerCase().startsWith("comicr")) return CPAGES_DIR;
-        if (type.toLowerCase().startsWith("co")) return COMICS_DIR;
-        if (type.toLowerCase().startsWith("bl")) return BLOGS_DIR;
-        if (type.toLowerCase().startsWith("vid")) return PREVIEWS_DIR;
-    }
-    return FILES_DIR;
-}
-
-app.use(express.static(PUBLIC_DIR, { extensions: publicExtensions }));
-
-app.get("/download/*", (req, res, next) => {
-    const targetBase = getTargetBase(req.query.type);
-
-    const rawSubPath = req.params[0] || "";
-
-    let decodedPath;
-    try {
-        decodedPath = decodeURIComponent(rawSubPath);
-    } catch (e) {
-        return res.status(400).end();
-    }
-
-    const safePath = path.join(targetBase, decodedPath);
-
-    if (!safePath.startsWith(targetBase)) {
-        return res.status(403).end();
-    }
-
-    res.sendFile(safePath, (err) => {
-        if (err) {
-            next();
-        }
+const searchPages = ["files", "comics", "blogs"];
+searchPages.forEach((page) => {
+    app.get(`/search/${page}*`, (req, res) => {
+        res.sendFile(path.join(PUBLIC_DIR, "search", `${page}.html`));
     });
 });
 
-app.use("/list", async (req, res, next) => {
-    try {
-        const targetBase = getTargetBase(req.query.type);
-        const items = await getDirectoryItems(targetBase, req.query.path || "");
+app.use(express.static(PUBLIC_DIR, { extensions: publicExtensions }));
+app.get("/download/*", downloadApi);
+app.use("/list", listApi);
 
-        res.json(items);
-    } catch (err) {
-        if (err.code === "ENOENT" || err.code === "ENOTDIR") {
-            return res.status(404).end();
-        }
-        next(err);
-    }
-})
-
-
-app.get("/", (req, res) => {
-    fs.readdir(FILES_DIR, { withFileTypes: true }, (err, entries) => {
-        if (err) {
-            return res.status(500).send("Unable to scan file directory.");
-        }
-
-        const files = entries
-            .filter(entry => entry.isFile())
-            .map(file => {
-                const filePath = path.join(FILES_DIR, file.name);
-                const stats = fs.statSync(filePath);
-                return {
-                    name: file.name,
-                    size: stats.size,
-                    updatedAt: stats.mtime
-                };
-            });
-
-        res.render("index", { files });
+app.use((req, res) => {
+    res.status(404).sendFile(path.join(PUBLIC_DIR, "404.html"), (err) => {
+        if (err) res.status(404).end("Not Found");
     });
 });
 
@@ -129,19 +47,27 @@ app.use((err, req, res, next) => {
 });
 
 async function startServer() {
-    await fsPromises.mkdir(PUBLIC_DIR, { recursive: true });
-    await fsPromises.mkdir(FILES_DIR, { recursive: true });
-    await fsPromises.mkdir(COMICS_DIR, { recursive: true });
-    await fsPromises.mkdir(PREVIEWS_DIR, { recursive: true });
-    await fsPromises.mkdir(CPAGES_DIR, { recursive: true });
-    await fsPromises.mkdir(BLOGS_DIR, { recursive: true });
+    try {
+        await Promise.all([
+            fsPromises.mkdir(PUBLIC_DIR, { recursive: true }),
+            fsPromises.mkdir(FILES_DIR, { recursive: true }),
+            fsPromises.mkdir(COMICS_DIR, { recursive: true }),
+            fsPromises.mkdir(PREVIEWS_DIR, { recursive: true }),
+            fsPromises.mkdir(CPAGES_DIR, { recursive: true }),
+            fsPromises.mkdir(BLOGS_DIR, { recursive: true })
+        ]);
 
-    app.listen(PORT, "0.0.0.0", () => {
-        console.log(`${getDate()} Server running on port http://${getLocalIP()}:${PORT}`);
-        processAllPreviews();
-        processAllCPreviews();
-        setInterval(processAllPreviews, 30 * 60 * 1000);
-    });
+        app.listen(PORT, "0.0.0.0", () => {
+            console.log(`${getDate()} Server running on http://${getLocalIP()}:${PORT}`);
+
+            processAllPreviews();
+            processAllCPreviews();
+            setInterval(processAllPreviews, 30 * 60 * 1000);
+        });
+    } catch (error) {
+        console.error(`${getDate()} Failed to start server:`, error);
+        process.exit(1);
+    }
 }
 
 startServer();

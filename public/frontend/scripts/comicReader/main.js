@@ -1,5 +1,4 @@
 import { state, setCurrentPageIndex, setComicData, setRatios } from "/scripts/comicReader/comicState";
-import { getComicMetadata } from "/scripts/comicReader/comicApi";
 import { handleLoadError, resizeComicPages, updateUrlPageParam } from "/scripts/comicReader/comicUI";
 import { switchPage, jumpToPageFromInput } from "/scripts/comicReader/comicNavigation";
 
@@ -28,8 +27,14 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         document.querySelector("#comicPath").innerHTML = `<a id="comicBack">↩ ${decodedPath}</a>`;
 
-        const comicInfo = await getComicMetadata(comicFullName);
-        
+        const safePath = encodeURIComponent(comicFullName);
+        const response = await fetch(`/download/${safePath}/comic.json?type=cr`);
+        if (!response.ok) {
+            throw new Error(`Failed to fetch comic.json: ${response.status} ${response.statusText}`);
+        }
+        const comicInfo = await response.json();
+
+
         setComicData(comicInfo);
         const imageFilenames = state.comicData.images;
 
@@ -49,7 +54,6 @@ document.addEventListener("DOMContentLoaded", async () => {
             }
         }
 
-        const safePath = encodeURIComponent(comicFullName);
 
         imageFilenames.forEach((targetImageName, i) => {
             const imageUrl = `/download/${safePath}/${encodeURIComponent(targetImageName)}?type=comicreaderdecompressed`;

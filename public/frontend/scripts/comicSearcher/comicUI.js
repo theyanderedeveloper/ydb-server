@@ -1,5 +1,6 @@
 import { ComicManConfig } from "/scripts/comicSearcher/comicConfig";
 import { getIcon, fetchComics, showPreview } from "/scripts/comicSearcher/comicService";
+import { el, escapeHTML } from "/scripts/general/utils";
 
 export function renderBreadcrumbs(path) {
     const container = el("breadcrumb");

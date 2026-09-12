@@ -3,6 +3,7 @@ const ffprobe = promisify(require("fluent-ffmpeg").ffprobe);
 const path = require("path");
 const os = require("os");
 const fs = require("fs");
+const { publicDecrypt } = require("crypto");
 
 const BASE_FILES = path.resolve(__dirname, "..", "files");
 const BASE_COMICS = path.resolve(__dirname, "..", "comics");
@@ -32,6 +33,18 @@ async function isSafeToProcess(filePath) {
     }
 }
 
+const DIR = path.join(__dirname, "..");
+
+const DATABASE_DIR = path.join(DIR, "public");
+const PUBLIC_DIR = path.join(DATABASE_DIR, "frontend");
+const FILES_DIR = path.join(DATABASE_DIR, "files");
+const COMICS_DIR = path.join(DATABASE_DIR, "comics");
+const BLOGS_DIR = path.join(DATABASE_DIR, "blogs");
+const CPAGES_DIR = path.join(DATABASE_DIR, "cpages");
+const PREVIEWS_DIR = path.join(DATABASE_DIR, "previews");
+
+
+
 const getSafePath = (userPath, baseDir) => {
     const safeBase = path.resolve(baseDir);
     const resolvedPath = path.resolve(safeBase, decodeURIComponent(userPath));
@@ -43,8 +56,15 @@ const getSafePath = (userPath, baseDir) => {
     return resolvedPath;
 };
 
-const getTargetBase = (type) => (type === "comic" ? BASE_COMICS : BASE_FILES);
-
+function getTargetBase(type) {
+    if (type) {
+        if (type.toLowerCase().startsWith("cr") || type.toLowerCase().startsWith("comicr")) return CPAGES_DIR;
+        if (type.toLowerCase().startsWith("co")) return COMICS_DIR;
+        if (type.toLowerCase().startsWith("bl")) return BLOGS_DIR;
+        if (type.toLowerCase().startsWith("vid")) return PREVIEWS_DIR;
+    }
+    return FILES_DIR;
+}
 let cachedLocalIP = null;
 
 function getLocalIP() {
@@ -74,10 +94,10 @@ function getAllExtensions(dir, extensionsSet = new Set()) {
                 if (ext) extensionsSet.add(ext);
             }
         }
-    extensionsSet.add("css")
     } catch {
     }
     return Array.from(extensionsSet);
 }
 
-module.exports = { isSafeToProcess, getTargetBase, getDate, getSafePath, getLocalIP, getAllExtensions, formatBytes };
+
+module.exports = { getTargetBase, isSafeToProcess, getDate, getSafePath, getLocalIP, getAllExtensions, formatBytes, DIR, DATABASE_DIR, PUBLIC_DIR, FILES_DIR, COMICS_DIR, BLOGS_DIR, CPAGES_DIR, PREVIEWS_DIR };
