@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Main | Vanilla's Vault</title>
+  <link rel="icon" type="image/x-icon" href="/favicon">
+  <link rel="canonical" href="https://database.theyandere.dev/" />
+
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://database.theyandere.dev/">
+  <meta property="og:title" content="Vanilla's Vault">
+  <meta property="og:description" content="A comprehensive digital database featuring files, comics, and community social hubs.">
+  <meta property="og:image" content="/resources/media/logos/nexussysdev_old">
+
+  <meta name="twitter:card" content="summary">
+  <meta property="twitter:url" content="https://database.theyandere.dev/">
+  <meta property="twitter:title" content="Vanilla's Vault">
+  <meta property="twitter:description" content="A comprehensive digital database featuring files, comics, and community social hubs.">
+
+  <link rel="stylesheet" href="/styles/base/main" />
+</head>
+
+<body>
+  <main class="frame">
+    <header class="frameHeader">
+      <a class="frameBack" href="/">↩</a>
+      <h1>Error 404</h1>
+    </header>
+    <div class="frameContent">
+        <div class="quoteRandom" data-quote="404"></div>
+        <h4 class="frameText">The page or file at ${url} doesn't exist.</h4>
+      <nav>
+
+        <ul class="frameLinkList">
+          <li><a class="frameLinkListItem" href="/search/files">📄 Browse Files Database</a></li>
+          <li><a class="frameLinkListItem" href="/search/comics">📖 Browse Comics Database</a></li>
+          <li><a href="/socials" class="frameLinkListItem">👥 Socials</a></li>
+          <li><a href="/about" class="frameLinkListItem">ℹ️ About the Database</a></li>
+          <li><a href="/privacy" class="frameLinkListItem">🔒 Privacy Policy</a></li>
+        </ul>
+      </nav>
+    </div>
+  </main>
+  <script src="/scripts/general/main" type="module"></script>
+  <script>
+    const url = window.location.href
+    document.querySelector("h4.frameText").textContent = document.querySelector("h4.frameText").textContent.replace("${url}", url).replace("https://", "")
+  </script>
+</body>
+
+</html>

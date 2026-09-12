@@ -1,5 +1,5 @@
 import { FileManConfig, iconMap, EXT } from "/scripts/fileSearcher/config";
-import { el, escapeHTML } from "/scripts/fileSearcher/utils";
+import { el, escapeHTML } from "/scripts/general/utils";
 import { renderList } from "/scripts/fileSearcher/fileManager";
 import { injectMediaControls, loadVideo } from "/scripts/fileSearcher/videoPlayer";
 
@@ -45,12 +45,12 @@ export async function showPreview(filePath) {
                 </div>
             `, filename);
         }
-        
+
         if (EXT.video.has(ext)) {
             wrapPreview(`
                 <video controls class="preview-video" id="video-player" preload="metadata"></video>
                 <div class="preview-unknown-wrapper">
-                    <a href="${downloadUrl}" download="${filename}" class="download-button">Download (Unedited) File</a>
+                    <a href="${downloadUrl}" download="${filename}" class="download-button">Download Video (original quality)</a>
                 </div>
             `, filename);
             injectMediaControls(filePath, document.getElementById("video-player"));
@@ -65,29 +65,18 @@ export async function showPreview(filePath) {
         }
 
         if (EXT.audio.has(ext)) {
-            const res = await fetch(downloadUrl);
-            if (!res.ok) return window.handleErrorResponse(res.status, filePath);
-
-            const localMediaUrl = URL.createObjectURL(await res.blob());
             wrapPreview(`
-                <div class="preview-audio-container">
-                    <div class="preview-audio-icon">${iconMap[ext] || "🎵"}</div>
-                    <p class="preview-audio-label">Audio stream: ${ext.toUpperCase()}</p>
-                    <audio controls src="${localMediaUrl}" class="preview-audio-player"></audio>
-                </div>
-                <div class="preview-unknown-wrapper">
-                    <a href="${downloadUrl}" download="${filename}" class="download-button">Download File</a>
-                </div>
-            `, filename);
-
-            const oldClose = window.closePreview;
-            window.closePreview = () => {
-                URL.revokeObjectURL(localMediaUrl);
-                if (oldClose) oldClose();
-            };
+        <div class="preview-audio-container">
+            <div class="preview-audio-icon">${iconMap[ext] || "🎵"}</div>
+            <p class="preview-audio-label">Audio stream: ${ext.toUpperCase()}</p>
+            <audio controls src="${downloadUrl}" class="preview-audio-player" preload="metadata"></audio>
+        </div>
+        <div class="preview-unknown-wrapper">
+            <a href="${downloadUrl}" download="${filename}" class="download-button">Download File</a>
+        </div>
+    `, filename);
             return;
         }
-
         if (ext === "pdf") {
             return wrapPreview(`
                 <embed src="${downloadUrl}" type="application/pdf" class="preview-pdf" />
