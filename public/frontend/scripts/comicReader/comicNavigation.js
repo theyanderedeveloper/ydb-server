@@ -1,7 +1,7 @@
 import { state, setCurrentPageIndex } from "/scripts/comicReader/comicState";
 import { updateUrlPageParam } from "/scripts/comicReader/comicUI";
 
-const pageInput = document.querySelector("#comicPageInput");
+export const pageInput = document.querySelector("#comicPageInput");
 
 export function switchPage(index) {
     if (index < 0 || index >= state.loadedPageElements.length || index === state.currentPageIndex) return;

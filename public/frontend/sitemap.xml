@@ -3,33 +3,39 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
 
   <url>
-       <loc>https://database.theyandere.dev/</loc>
-       <lastmod>2026-09-06T08:32:15+00:00</lastmod>
-       <priority>1.0000</priority>
+    <loc>https://database.theyandere.dev/</loc>
+    <lastmod>2026-09-06T08:32:15+00:00</lastmod>
+    <priority>1.0000</priority>
   </url>
   <url>
-       <loc>https://database.theyandere.dev/search/files</loc>
-       <lastmod>2026-09-06T08:32:15+00:00</lastmod>
-       <priority>0.8000</priority>
+    <loc>https://database.theyandere.dev/search/files</loc>
+    <lastmod>2026-09-06T08:32:15+00:00</lastmod>
+    <priority>0.8000</priority>
   </url>
   <url>
-       <loc>https://database.theyandere.dev/search/comics</loc>
-       <lastmod>2026-09-06T08:32:15+00:00</lastmod>
-       <priority>0.8000</priority>
+    <loc>https://database.theyandere.dev/search/comics</loc>
+    <lastmod>2026-09-06T08:32:15+00:00</lastmod>
+    <priority>0.8000</priority>
   </url>
   <url>
-       <loc>https://database.theyandere.dev/socials</loc>
-       <lastmod>2026-09-06T08:32:15+00:00</lastmod>
-       <priority>0.8000</priority>
+    <loc>https://database.theyandere.dev/socials</loc>
+    <lastmod>2026-09-06T08:32:15+00:00</lastmod>
+    <priority>0.8000</priority>
   </url>
   <url>
-       <loc>https://database.theyandere.dev/about</loc>
-       <lastmod>2026-09-06T08:32:15+00:00</lastmod>
-       <priority>0.8000</priority>
+    <loc>https://database.theyandere.dev/about</loc>
+    <lastmod>2026-09-06T08:32:15+00:00</lastmod>
+    <priority>0.8000</priority>
   </url>
-    <url>
-       <loc>https://database.theyandere.dev/privacy</loc>
-       <lastmod>2026-09-06T08:32:15+00:00</lastmod>
-       <priority>0.8000</priority>
+  <url>
+    <loc>https://database.theyandere.dev/privacy</loc>
+    <lastmod>2026-09-06T08:32:15+00:00</lastmod>
+    <priority>0.8000</priority>
+  </url>
+  <url>
+    <loc>https://database.theyandere.dev/faq</loc>
+    <lastmod>2026-09-06T08:32:15+00:00</lastmod>
+    <priority>0.8000</priority>
   </url>
 </urlset>
+

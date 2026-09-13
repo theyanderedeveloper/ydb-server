@@ -2,7 +2,7 @@ import { FileManConfig, iconMap } from "/scripts/fileSearcher/config";
 import { el, formatBytes, formatDate, escapeHTML } from "/scripts/general/utils";
 import { showPreview } from "/scripts/fileSearcher/previewManager";
 
-const PROPERTY_MAP = { atime: "createdAt", mtime: "updatedAt", size: "size" };
+export const PROPERTY_MAP = { atime: "createdAt", mtime: "updatedAt", size: "size" };
 
 export function sortItems(items) {
     const { sortBy, sortOrder } = FileManConfig;
@@ -81,7 +81,7 @@ export async function fetchFiles(path = "", pushToHistory = true) {
         }
     }
 }
-function createItemElement(item) {
+export function createItemElement(item) {
     const div = document.createElement("div");
     div.className = item.type === "dir" ? "folder" : "file";
     if (`files/${item.path}` === FileManConfig.currentPreviewPath) div.classList.add("active-item");

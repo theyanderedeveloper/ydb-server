@@ -1,33 +1,16 @@
-body {
-    display: flex;
-    flex-direction: column;
-    align-items: stretch;
-    justify-content: flex-start;
-    padding: 32px;
-    margin: 0;
-
-}
-
 ul#otherPages {
     padding: 10px 16px;
-    background: var(--bg-surface);
     border: 1px solid var(--border-subtle);
     border-bottom: none;
     border-radius: var(--radius) var(--radius) 0 0;
     font-size: 13px;
     display: flex;
-    flex-direction: row;
     flex-wrap: wrap;
     gap: 8px;
-    cursor: pointer;
     justify-content: center;
     align-items: center;
     list-style: none;
     user-select: none;
-    transition: var(--transition-smooth);
-    backdrop-filter:
-        blur(8px);
-
 }
 
 ul#otherPages li {
@@ -35,6 +18,7 @@ ul#otherPages li {
     border-radius: var(--radius);
     color: var(--text-secondary);
     transition: var(--transition-smooth);
+    cursor: pointer;
 }
 
 ul#otherPages li:hover {
@@ -43,9 +27,7 @@ ul#otherPages li:hover {
 }
 
 #breadcrumb {
-    margin-bottom: 16px;
     padding: 12px 16px;
-    background: var(--bg-surface);
     border: 1px solid var(--border-subtle);
     border-top: none;
     border-radius: 0 0 var(--radius) var(--radius);
@@ -56,9 +38,6 @@ ul#otherPages li:hover {
     text-align: center;
     user-select: none;
     transition: var(--transition-smooth);
-    backdrop-filter:
-        blur(8px);
-
 }
 
 #breadcrumb:hover {
@@ -66,23 +45,7 @@ ul#otherPages li:hover {
     color: var(--text-primary);
 }
 
-#blog-list {
-    display: flex;
-    flex-direction: column;
-    padding: 16px;
-    background: var(--bg-surface);
-    border: 1px solid var(--border-subtle);
-    border-radius: var(--radius);
-    overflow: hidden auto;
-    max-height: calc(100vh - 256px);
-    height: calc(100vh - 256px);
-    gap: 16px;
-    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-    backdrop-filter:
-        blur(8px);
-}
-
-.blog,
+.comic,
 .folder {
     background: rgba(255, 255, 255, 0.02);
     border: 1px solid var(--border-subtle);
@@ -91,9 +54,8 @@ ul#otherPages li:hover {
     color: var(--text-primary);
     text-align: center;
     display: flex;
-    flex-direction: row;
-    justify-content: center;
     align-items: center;
+    justify-content: center;
     gap: 12px;
     padding: 16px;
     border-radius: var(--radius);
@@ -101,43 +63,22 @@ ul#otherPages li:hover {
     cursor: pointer;
 }
 
-.blog .icon,
+.comic .icon,
 .folder .icon {
-    flex-shrink: 0;
-    flex-grow: 0;
-    flex-basis: 24px;
+    flex: 0 0 24px;
     opacity: 0.75;
     transition: var(--transition-smooth);
 }
 
 .folder:hover,
-.blog:hover {
+.comic:hover {
     background: rgba(255, 255, 255, 0.05);
     border-color: var(--accent);
     box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
 }
 
 .folder:hover .icon,
-.blog:hover .icon {
+.comic:hover .icon {
     opacity: 1;
     color: var(--accent);
-}
-
-video.customBlogSearchVideo {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    z-index: -99999;
-    object-fit: cover;
-    
-}
-
-.bg-canvas {
-    position: fixed;
-    inset: 0;
-    overflow: hidden;
-    pointer-events: none;
-    z-index: -9999;
 }

@@ -6,20 +6,26 @@ const helmetMiddleware = helmet({
         directives: {
             defaultSrc: ["'self'"],
             scriptSrc: [
-                "'self'", 
-                "'unsafe-inline'", 
-                "https://*.cloudflareinsights.com",
+                "'self'",
+                "'unsafe-inline'",
             ],
             scriptSrcAttr: ["'unsafe-inline'"],
-            styleSrc: ["'self'", "'unsafe-inline'"],
+            styleSrc: [
+                "'self'",
+                "'unsafe-inline'",
+                "https://cdnjs.cloudflare.com",
+                "https://fonts.googleapis.com"
+            ],
             imgSrc: ["'self'", "data:", "https:"],
             mediaSrc: ["'self'", "blob:"],
             connectSrc: [
-                "'self'", 
-                "https://cloudflareinsights.com",
-                "https://*.cloudflareinsights.com",
+                "'self'",
             ],
-            fontSrc: ["'self'"],
+            fontSrc: [
+                "'self'",
+                "https://fonts.gstatic.com",
+                "https://cdnjs.cloudflare.com"
+            ],
             objectSrc: ["'none'"],
             upgradeInsecureRequests: [],
         },

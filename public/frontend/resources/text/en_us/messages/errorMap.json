@@ -1,0 +1,46 @@
+{
+    "400": {
+        "title": "Bad request",
+        "msg": "The request for ${context} contains invalid syntax."
+    },
+    "401": {
+        "title": "Unauthorized",
+        "msg": "Valid authentication credentials are required for ${context}."
+    },
+    "408": {
+        "title": "Request timeout",
+        "msg": "The server timed out waiting for ${context}."
+    },
+    "429": {
+        "title": "Too many requests",
+        "msg": "Rate limit exceeded."
+    },
+    "502": {
+        "title": "Bad gateway",
+        "msg": "The server received an invalid response from the upstream server for ${context}."
+    },
+    "503": {
+        "title": "Service unavailable",
+        "msg": "The server is temporarily unable to process ${context}."
+    },
+    "504": {
+        "title": "Gateway timeout",
+        "msg": "The upstream server failed to respond in time for ${context}."
+    },
+    "404": {
+        "title": "Not found",
+        "msg": "The requested item ${context} does not exist."
+    },
+    "403": {
+        "title": "Forbidden",
+        "msg": "You do not have permission to access this resource."
+    },
+    "416": {
+        "title": "Range error",
+        "msg": "The server couldn't stream the requested file chunk."
+    },
+    "500": {
+        "title": "Server error",
+        "msg": "The server encountered an internal glitch."
+    }
+}

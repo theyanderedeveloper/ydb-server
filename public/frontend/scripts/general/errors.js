@@ -1,10 +1,11 @@
 import { el } from "/scripts/general/utils";
+import { language } from "/scripts/general/state"
 
 export let errorMap;
 
 export async function setErrorMap() {
     const safePath = encodeURIComponent(comicFullName);
-    const response = await fetch(`/resources/errorMap.json`);
+    const response = await fetch(`/resources/text/${language}/messages/errorMap`);
     if (!response.ok) {
         throw new Error(`Failed to fetch errormap: ${response.status} ${response.statusText}`);
     }
@@ -12,7 +13,7 @@ export async function setErrorMap() {
 }
 
 
-export function renderError(code, title, message, context="") {
+export function renderError(code, title, message, context = "") {
     const preview = el("preview");
     if (!preview) return;
 

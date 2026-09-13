@@ -25,11 +25,12 @@ export function updateSidebarWidth() {
 
 export const targetWidthChange = (e) => {
     const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-    State.targetWidth = Math.min(Math.max(clientX, 192), window.innerWidth * 0.8);
+    State.targetWidth = Math.max(128, Math.min(768, clientX, window.innerWidth * 0.5));
 };
 
 export const targetWindowResizeWidthChange = () => {
-    State.targetWidth = Math.min(Math.max(State.targetWidth, 192), window.innerWidth * 0.8);
+    State.targetWidth = Math.max(128, Math.min(768, State.targetWidth, window.innerWidth * 0.5));
+
 
     if (!State.animationFrameId) {
         State.animationFrameId = requestAnimationFrame(updateSidebarWidth);

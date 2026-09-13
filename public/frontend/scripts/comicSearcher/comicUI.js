@@ -78,24 +78,51 @@ export function renderList(items, path, push = true) {
                 showPreview(item.path);
             }
         };
-        if ( (item.name !== "style.css" && item.name !== "background.mp4")) fragment.append(div);
+        if (item.name !== "style.css" && item.name !== "background.mp4") fragment.append(div);
     });
 
     comicList.append(fragment);
 
-    document.querySelectorAll(".customComicSearchCSS").forEach((elNode) => {
-        elNode.remove();
-    });
-
-    const customComicSearchStyle = document.createElement("link");
-
-    customComicSearchStyle.rel = "stylesheet";
-
     const cleanStylePath = path ? (path.startsWith("/") ? path : `/${path}`) : "";
-    customComicSearchStyle.href = `/download${cleanStylePath}/style.css?type=comicStyle`;
-    customComicSearchStyle.classList.add("customComicSearchCSS");
-    
-    document.querySelector(".customComicSearchVideo").src = `/download${cleanStylePath}/background.mp4?type=comicVideo`
+    const hasStyle = items.some(item => item.name === "style.css" && item.type === "file");
+    const targetHref = (hasStyle && path) ? `/download${cleanStylePath}/style.css?type=comicStyle` : `/download/style.css?type=comicStyle`;
 
-    document.querySelector("head").prepend(customComicSearchStyle);
+    let customComicSearchStyle = document.querySelector(".customComicSearchCSS");
+
+    if (!customComicSearchStyle || customComicSearchStyle.getAttribute("href") !== targetHref) {
+        customComicSearchStyle = document.createElement("link");
+        customComicSearchStyle.rel = "stylesheet";
+        customComicSearchStyle.href = targetHref;
+        customComicSearchStyle.classList.add("customComicSearchCSS");
+
+        customComicSearchStyle.onerror = () => {
+            if (!customComicSearchStyle.dataset.fallback) {
+                customComicSearchStyle.dataset.fallback = "true";
+                customComicSearchStyle.href = "/download/style.css?type=comicStyle";
+            } else {
+                customComicSearchStyle.remove();
+            }
+        };
+
+        document.querySelector("head").prepend(customComicSearchStyle);
+    }
+
+    const videoEl = document.querySelector(".customComicSearchVideo");
+    if (videoEl) {
+        const hasVideo = items.some(item => item.name === "background.mp4" && item.type === "file");
+        if (hasVideo && path) {
+            const targetVideoSrc = `/download${cleanStylePath}/background.mp4?type=comicVideo`;
+            if (videoEl.getAttribute("src") !== targetVideoSrc) {
+                videoEl.style.display = "";
+                videoEl.src = targetVideoSrc;
+                videoEl.onerror = () => {
+                    videoEl.style.display = "none";
+                    videoEl.removeAttribute("src");
+                };
+            }
+        } else {
+            videoEl.style.display = "none";
+            videoEl.removeAttribute("src");
+        }
+    }
 }
