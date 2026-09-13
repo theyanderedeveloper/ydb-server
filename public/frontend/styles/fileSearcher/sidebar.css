@@ -39,7 +39,7 @@
     padding: 12px 16px;
     background: rgba(255, 255, 255, 0.02);
     border: 1px solid var(--border-subtle);
-    border-radius: var(--radius-md);
+    border-radius: var(--radius);
     font-family: var(--font-sans);
     font-size: 14px;
     color: var(--text-primary);
@@ -62,7 +62,7 @@
     padding: 8px;
     background: rgba(255, 255, 255, 0.01);
     border: 1px solid var(--border-subtle);
-    border-radius: var(--radius-lg);
+    border-radius: var(--radius);
     overflow: hidden auto;
     list-style: none;
     display: flex;
@@ -77,7 +77,7 @@
     align-items: center;
     gap: 12px;
     padding: 10px 12px;
-    border-radius: var(--radius-sm);
+    border-radius: var(--radius);
     cursor: pointer;
     font-size: 14px;
     font-weight: 400;
@@ -111,7 +111,7 @@
     background: rgba(255, 255, 255, 0.02);
     border: 1px solid var(--border-subtle);
     border-bottom: none;
-    border-radius: var(--radius-md) var(--radius-md) 0 0;
+    border-radius: var(--radius) var(--radius) 0 0;
     font-size: 12px;
     display: flex;
     flex-direction: row;
@@ -127,7 +127,7 @@
 
 #otherPages li {
     padding: 4px 8px;
-    border-radius: var(--radius-sm);
+    border-radius: var(--radius);
     color: var(--text-secondary);
     transition: var(--transition-smooth);
 }
@@ -143,7 +143,7 @@
     background: rgba(255, 255, 255, 0.02);
     border: 1px solid var(--border-subtle);
     border-top: none;
-    border-radius: 0 0 var(--radius-md) var(--radius-md);
+    border-radius: 0 0 var(--radius) var(--radius);
     font-size: 12px;
     color: var(--text-secondary);
     cursor: pointer;
@@ -187,7 +187,7 @@
     color: var(--text-secondary);
     border: 1px solid var(--border-subtle);
     padding: 6px 10px;
-    border-radius: var(--radius-sm);
+    border-radius: var(--radius);
     cursor: pointer;
     font-size: 11px;
     font-family: var(--font-sans);

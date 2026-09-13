@@ -1,0 +1,39 @@
+.quoteRandom {
+    padding: 24px 32px 24px 28px;
+    background: var(--bg-surface);
+    border: 1px solid var(--border-subtle);
+    border-left: 4px solid var(--accent);
+    border-radius: var(--radius);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+    display: flex;
+    gap: 4px;
+    flex-direction: row;
+    transition: ease-out 0.5s, var(--transition-smooth);
+    font-size: 18px;
+    font-weight: 400;
+    color: var(--text-primary);
+    overflow-wrap: break-word;
+    hyphens: auto;
+    text-wrap: normal;
+    transition: all var(--transition-smooth);
+}
+
+.quoteRandom.loading,
+.quoteRandom.loading * {
+    color: #ffffff33;
+
+}
+
+.quoteRandom:hover {
+    border-color: #ffffff33;
+    border-left-color: var(--accent-hover);
+}
+
+.quoteRandom a {
+    font-style: normal;
+    color: var(--quote);
+    transition: var(--transition-smooth);
+    white-space: normal;
+    overflow-wrap: break-word;
+    word-break: break-word;
+}

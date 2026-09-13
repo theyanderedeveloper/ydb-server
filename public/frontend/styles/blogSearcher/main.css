@@ -13,7 +13,7 @@ ul#otherPages {
     background: var(--bg-surface);
     border: 1px solid var(--border-subtle);
     border-bottom: none;
-    border-radius: var(--radius-md) var(--radius-md) 0 0;
+    border-radius: var(--radius) var(--radius) 0 0;
     font-size: 13px;
     display: flex;
     flex-direction: row;
@@ -32,7 +32,7 @@ ul#otherPages {
 
 ul#otherPages li {
     padding: 4px 10px;
-    border-radius: var(--radius-sm);
+    border-radius: var(--radius);
     color: var(--text-secondary);
     transition: var(--transition-smooth);
 }
@@ -48,7 +48,7 @@ ul#otherPages li:hover {
     background: var(--bg-surface);
     border: 1px solid var(--border-subtle);
     border-top: none;
-    border-radius: 0 0 var(--radius-md) var(--radius-md);
+    border-radius: 0 0 var(--radius) var(--radius);
     font-size: 13px;
     color: var(--text-secondary);
     cursor: pointer;
@@ -72,7 +72,7 @@ ul#otherPages li:hover {
     padding: 16px;
     background: var(--bg-surface);
     border: 1px solid var(--border-subtle);
-    border-radius: var(--radius-lg);
+    border-radius: var(--radius);
     overflow: hidden auto;
     max-height: calc(100vh - 256px);
     height: calc(100vh - 256px);
@@ -96,7 +96,7 @@ ul#otherPages li:hover {
     align-items: center;
     gap: 12px;
     padding: 16px;
-    border-radius: var(--radius-md);
+    border-radius: var(--radius);
     transition: var(--transition-smooth);
     cursor: pointer;
 }
