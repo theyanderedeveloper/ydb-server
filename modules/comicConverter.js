@@ -1,13 +1,8 @@
-const fs = require("fs");
 const fsPromises = require("fs/promises");
 const path = require("path");
 const AdmZip = require("adm-zip");
 const pLimit = require("p-limit");
-const { getDate } = require("./smallfunctions");
-
-const DIR = path.resolve(__dirname, "..", "public");
-const BASE_COMICS = path.resolve(DIR, "comics");
-const BASE_PREVIEWS = path.resolve(DIR, "cpages");
+const { getDate, DIRS } = require("./smallfunctions");
 
 const limit = pLimit(4);
 let isProcessingCPreviews = false;
@@ -34,9 +29,9 @@ async function processAllCPreviews() {
                 await walk(fullPath);}
             else {
                 try {
-                    const relativePath = path.relative(BASE_COMICS, fullPath);
+                    const relativePath = path.relative(DIRS.comics, fullPath);
                     const parsed = path.parse(relativePath);
-                    const previewDirPath = path.join(BASE_PREVIEWS, parsed.dir, parsed.base);
+                    const previewDirPath = path.join(DIRS.cpages, parsed.dir, parsed.base);
 
                     let previewExists = true;
                     try {
@@ -47,24 +42,23 @@ async function processAllCPreviews() {
 
                     if (!previewExists) {
                         await limit(async () => {
-                            console.log(`${getDate()} Generating previews for: ${relativePath}`);
+                            console.log(`${getDate()} Generating comic previews for: ${relativePath}`);
                             await fsPromises.mkdir(previewDirPath, { recursive: true });
 
-                            console.log(`${getDate()} Extracting archive: ${relativePath} -> ${previewDirPath}`);
                             const zip = new AdmZip(fullPath);
                             zip.extractAllTo(previewDirPath, true);
-                            console.log(`${getDate()} Finished extracting: ${relativePath}`);
+                            console.log(`${getDate()} Finished generating comic previews for: ${relativePath}`);
                         });
                     }
                 } catch (fileErr) {
-                    console.error(`${getDate()} Error processing file ${entry.name}:`, fileErr);
+                    console.error(`${getDate()} Error processing comic "${entry.name}":`, fileErr);
                 }
             }
         }
     }
 
     try {
-        await walk(BASE_COMICS);
+        await walk(DIRS.comics);
         console.log(`${getDate()} Background comic preview generation finished.`);
     } catch (err) {
         console.error(`${getDate()} Error during background task walk:`, err);

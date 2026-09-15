@@ -1,14 +1,10 @@
-const fs = require("fs");
 const fsPromises = require("fs/promises");
 const path = require("path");
 const ffmpeg = require("fluent-ffmpeg");
 const pLimit = require("p-limit");
 const { isSafeToProcess } = require("./smallfunctions");
-const { getDate } = require("./smallfunctions");
+const { getDate, DIRS } = require("./smallfunctions");
 
-const DIR = path.resolve(__dirname, "..", "public")
-const BASE_FILES = path.resolve(DIR, "files");
-const BASE_PREVIEWS = path.resolve(DIR, "previews");
 const limit = pLimit(1);
 
 
@@ -31,14 +27,14 @@ async function generateVideoPreview(filePath, outputFolder) {
                     let cmd = ffmpeg(filePath);
 
                     if (isRaw) {
-                        cmd.outputOptions(["-c", "copy", "-hls_time", "15", "-hls_list_size", "0", "-f", "hls"]);
+                        cmd.outputOptions(["-c", "copy", "-hls_time", "5", "-hls_list_size", "0", "-f", "hls"]);
                     } else {
                         cmd.outputOptions([
                             "-sws_flags", "fast_bilinear",
                             "-vf", `scale=-2:${res.height}`,
                             "-c:v", "libx264", "-b:v", res.bitrate,
                             "-profile:v", "baseline", "-level", "3.0",
-                            "-hls_time", "15",
+                            "-hls_time", "5",
                             "-hls_list_size", "0",
                             "-f", "hls",
                             "-preset", "fast",
@@ -83,7 +79,7 @@ async function processAllPreviews() {
         const entries = await fsPromises.readdir(dir, { withFileTypes: true });
         for (const entry of entries) {
             const fullPath = path.join(dir, entry.name);
-            
+
             if (entry.isDirectory()) {
                 await walk(fullPath);
             } else {
@@ -91,16 +87,16 @@ async function processAllPreviews() {
 
                 if (VIDEO_EXTENSIONS.has(ext)) {
                     try {
-                        const relativePath = path.relative(BASE_FILES, fullPath);
+                        const relativePath = path.relative(DIRS.files, fullPath);
                         const safe = await isSafeToProcess(fullPath);
-                        
+
                         if (!safe) {
                             console.log(`${getDate()} Skipping dangerous video: ${entry.name}`);
                             continue;
                         }
 
                         const parsed = path.parse(relativePath);
-                        const previewDirPath = path.join(BASE_PREVIEWS, parsed.dir, parsed.base);
+                        const previewDirPath = path.join(DIRS.previews, parsed.dir, parsed.base);
 
                         let previewExists = true;
                         try {
@@ -110,10 +106,10 @@ async function processAllPreviews() {
                         }
 
                         if (!previewExists) {
-                            console.log(`${getDate()} Generating previews for: ${relativePath}`);
+                            console.log(`${getDate()} Generating video previews for: ${relativePath}`);
                             await fsPromises.mkdir(previewDirPath, { recursive: true });
                             await generateVideoPreview(fullPath, previewDirPath);
-                            console.log(`${getDate()} Finished generating previews for: ${relativePath}`);
+                            console.log(`${getDate()} Finished generating video previews for: ${relativePath}`);
                         }
                     } catch (fileErr) {
                         console.error(`${getDate()} Error processing file ${entry.name}:`, fileErr);
@@ -124,7 +120,7 @@ async function processAllPreviews() {
     }
 
     try {
-        await walk(BASE_FILES);
+        await walk(DIRS.files);
         console.log(`${getDate()} Background preview generation finished.`);
     } catch (err) {
         console.error(`${getDate()} Error during background task walk:`, err);

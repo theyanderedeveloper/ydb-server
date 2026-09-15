@@ -1,6 +1,6 @@
 {
   "name": "vanillas-vault",
-  "version": "1.0.0",
+  "version": "0.1.1",
   "description": "Lightweight database for hosting videos, files, images, and other media. Rewritten from the base already present.",
   "homepage": "https://sources.theyandere.dev/Yandere/ydb-server",
   "bugs": {

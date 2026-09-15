@@ -3,10 +3,20 @@ const ffprobe = promisify(require("fluent-ffmpeg").ffprobe);
 const path = require("path");
 const os = require("os");
 const fs = require("fs");
-const { publicDecrypt } = require("crypto");
 
-const BASE_FILES = path.resolve(__dirname, "..", "files");
-const BASE_COMICS = path.resolve(__dirname, "..", "comics");
+const baseDir = path.join(__dirname, "..");
+const databaseDir = path.join(baseDir, "public");
+
+const DIRS = {
+    dir: baseDir,
+    database: databaseDir,
+    public: path.join(databaseDir, "frontend"),
+    files: path.join(databaseDir, "files"),
+    comics: path.join(databaseDir, "comics"),
+    blogs: path.join(databaseDir, "blogs"),
+    cpages: path.join(databaseDir, "cpages"),
+    previews: path.join(databaseDir, "previews"),
+};
 
 function getDate() {
     return `[${new Date().toLocaleString()}]`;
@@ -33,16 +43,6 @@ async function isSafeToProcess(filePath) {
     }
 }
 
-const DIR = path.join(__dirname, "..");
-
-const DATABASE_DIR = path.join(DIR, "public");
-const PUBLIC_DIR = path.join(DATABASE_DIR, "frontend");
-const FILES_DIR = path.join(DATABASE_DIR, "files");
-const COMICS_DIR = path.join(DATABASE_DIR, "comics");
-const BLOGS_DIR = path.join(DATABASE_DIR, "blogs");
-const CPAGES_DIR = path.join(DATABASE_DIR, "cpages");
-const PREVIEWS_DIR = path.join(DATABASE_DIR, "previews");
-
 
 
 const getSafePath = (userPath, baseDir) => {
@@ -58,12 +58,12 @@ const getSafePath = (userPath, baseDir) => {
 
 function getTargetBase(type) {
     if (type) {
-        if (type.toLowerCase().startsWith("cr") || type.toLowerCase().startsWith("comicr")) return CPAGES_DIR;
-        if (type.toLowerCase().startsWith("co")) return COMICS_DIR;
-        if (type.toLowerCase().startsWith("bl")) return BLOGS_DIR;
-        if (type.toLowerCase().startsWith("vid")) return PREVIEWS_DIR;
+        if (type.toLowerCase().startsWith("cr") || type.toLowerCase().startsWith("comicr")) return DIRS.cpages;
+        if (type.toLowerCase().startsWith("co")) return DIRS.comics;
+        if (type.toLowerCase().startsWith("bl")) return DIRS.blogs;
+        if (type.toLowerCase().startsWith("vid")) return DIRS.previews;
     }
-    return FILES_DIR;
+    return DIRS.files;
 }
 let cachedLocalIP = null;
 
@@ -100,4 +100,4 @@ function getAllExtensions(dir, extensionsSet = new Set()) {
 }
 
 
-module.exports = { getTargetBase, isSafeToProcess, getDate, getSafePath, getLocalIP, getAllExtensions, formatBytes, DIR, DATABASE_DIR, PUBLIC_DIR, FILES_DIR, COMICS_DIR, BLOGS_DIR, CPAGES_DIR, PREVIEWS_DIR };
+module.exports = { getTargetBase, isSafeToProcess, getDate, getSafePath, getLocalIP, getAllExtensions, formatBytes, DIRS, };
