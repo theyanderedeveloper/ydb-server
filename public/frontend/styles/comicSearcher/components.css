@@ -32,16 +32,22 @@ ul#otherPages li:hover {
     border-top: none;
     border-radius: 0 0 var(--radius) var(--radius);
     font-size: 13px;
-    color: var(--text-secondary);
     cursor: pointer;
     white-space: nowrap;
     text-align: center;
     user-select: none;
+}
+.breadcrumb-item {
+    color: var(--text-secondary);
+    border-radius: var(--radius);
+    padding: 4px;
     transition: var(--transition-smooth);
+    
 }
 
-#breadcrumb:hover {
-    background: rgba(255, 255, 255, 0.03);
+.breadcrumb-item:hover {
+    border: 1px solid var(--border-subtle);
+    background: rgba(255, 255, 255, 0.25);
     color: var(--text-primary);
 }
 

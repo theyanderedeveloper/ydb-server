@@ -30,6 +30,18 @@ const helmetMiddleware = helmet({
             upgradeInsecureRequests: [],
         },
     },
+    hsts: {
+        maxAge: 63072000,
+        includeSubDomains: true,
+        preload: true,
+    },
 });
 
-module.exports = { helmetMiddleware };
+const cacheControlMiddleware = (req, res, next) => {
+    res.setHeader("Cache-Control", "no-store, no-cache, must-revalidate, proxy-revalidate");
+    res.setHeader("Pragma", "no-cache");
+    res.setHeader("Expires", "0");
+    next();
+};
+
+module.exports = { helmetMiddleware, cacheControlMiddleware };

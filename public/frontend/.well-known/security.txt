@@ -1,0 +1,4 @@
+Contact: mailto:yandere@theyandere.dev
+Preferred-Languages: en
+Canonical: https://theyandere.dev/.well-known/security.txt
+Expires: 2027-12-01T00:00:00.000Z

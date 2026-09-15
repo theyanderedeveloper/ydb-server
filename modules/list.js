@@ -1,6 +1,6 @@
 const fsPromises = require("fs/promises");
 const path = require("path");
-const { getSafePath, getTargetBase } = require("./smallfunctions");
+const { getSafePath, } = require("./smallfunctions");
 
 async function getDirectoryItems(targetBase, queryPath = "") {
     const dirPath = getSafePath(queryPath, targetBase);
