@@ -7,7 +7,7 @@
 :root {
     --bg-surface: #181b25;
     --bg-code: #12141c;
-    --border-subtle: rgba(255, 255, 255, 0.08);
+    --border-subtle: #ffffff14;
     --text-primary: #f3f4f6;
     --text-secondary: #9ca3af;
     --accent: #6366f1;
@@ -28,7 +28,7 @@ urlset {
     padding: 24px;
     border-radius: var(--radius);
     border: 1px solid var(--border-subtle);
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 10px 30px #0000004d;
 }
 
 urlset::before {
@@ -56,11 +56,11 @@ url {
 }
 
 url:hover {
-    background-color: rgba(255, 255, 255, 0.03);
+    background-color: #ffffff08;
 }
 
 url:nth-of-type(odd) {
-    background-color: rgba(255, 255, 255, 0.015);
+    background-color: #ffffff04;
 }
 
 loc {
