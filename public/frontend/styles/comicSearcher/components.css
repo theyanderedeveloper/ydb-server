@@ -13,16 +13,44 @@ ul#otherPages {
     user-select: none;
 }
 
-ul#otherPages li {
+ul#authorPages {
+    padding: 10px 16px;
+    border: 1px solid var(--border-subtle);
+    border-top-color: rgb(from var(--border-subtle) r g b / calc(alpha - 0.04));
+    border-bottom-color: rgb(from var(--border-subtle) r g b / calc(alpha - 0.04));
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    list-style: none;
+    user-select: none;
+    overflow: hidden;
+}
+
+ul#otherPages li,
+ul#authorPages li {
     padding: 4px 10px;
     border-radius: var(--radius);
     color: var(--text-secondary);
     transition: var(--transition-smooth);
     cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
 }
 
-ul#otherPages li:hover {
-    background: rgba(255, 255, 255, 0.05);
+ul#authorPages li img {
+    vertical-align: middle;
+    display: inline-block;
+    height: 1.5em;
+    width: auto;
+    overflow: visible;
+    margin: 0 8px;
+}
+
+ul#otherPages li:hover,
+ul#authorPages li:hover {
+    background: #ffffff0d;
     color: var(--text-primary);
 }
 
@@ -36,24 +64,26 @@ ul#otherPages li:hover {
     white-space: nowrap;
     text-align: center;
     user-select: none;
+    overflow: hidden;
+    text-wrap: wrap;
 }
+
 .breadcrumb-item {
     color: var(--text-secondary);
     border-radius: var(--radius);
     padding: 4px;
     transition: var(--transition-smooth);
-    
 }
 
 .breadcrumb-item:hover {
     border: 1px solid var(--border-subtle);
-    background: rgba(255, 255, 255, 0.25);
+    background: #ffffff40;
     color: var(--text-primary);
 }
 
 .comic,
 .folder {
-    background: rgba(255, 255, 255, 0.02);
+    background: #ffffff05;
     border: 1px solid var(--border-subtle);
     font-size: 15px;
     font-weight: 500;
@@ -78,9 +108,9 @@ ul#otherPages li:hover {
 
 .folder:hover,
 .comic:hover {
-    background: rgba(255, 255, 255, 0.05);
+    background: #ffffff0d;
     border-color: var(--accent);
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 6px 16px #0000004d;
 }
 
 .folder:hover .icon,

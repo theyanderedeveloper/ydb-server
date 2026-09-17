@@ -39,7 +39,6 @@
 .frameText {
     line-height: 1.6;
     word-wrap: break-word;
-    
 }
 
 .frameLinkList {
@@ -54,7 +53,7 @@
     align-items: center;
     gap: 16px;
     padding: 14px 18px;
-    background: rgba(255, 255, 255, 0.02);
+    background: #ffffff05;
     border-radius: var(--radius);
     border: 1px solid var(--border-subtle);
     user-select: none;
@@ -76,7 +75,7 @@
 }
 
 .frameLinkListItem:hover, .frameLinkListItem:active {
-    background: rgba(255, 255, 255, 0.05);
+    background: #ffffff0d;
     border-color: var(--accent);
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 6px 16px #0000004d;
 }

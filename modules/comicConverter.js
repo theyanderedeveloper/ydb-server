@@ -9,7 +9,9 @@ let isProcessingCPreviews = false;
 
 async function processAllCPreviews() {
     if (isProcessingCPreviews) {
-        console.log(`${getDate()} Previous comic extraction still running (how?). Skipping this interval.`);
+        console.log(
+            `${getDate()} Previous comic extraction still running. Skipping this interval.`,
+        );
         return;
     }
 
@@ -19,15 +21,20 @@ async function processAllCPreviews() {
     async function walk(dir) {
         const entries = await fsPromises.readdir(dir, { withFileTypes: true });
         for (const entry of entries) {
-            if (!entry.isDirectory() && ( entry.name === "style.css" || entry.name === "background.mp4")) {
+            if (
+                !entry.isDirectory() &&
+                (entry.name === "style.css" ||
+                    entry.name === "background.mp4" ||
+                    entry.name === "data.json")
+            ) {
                 continue;
             }
 
             const fullPath = path.join(dir, entry.name);
 
             if (entry.isDirectory()) {
-                await walk(fullPath);}
-            else {
+                await walk(fullPath);
+            } else {
                 try {
                     const relativePath = path.relative(DIRS.comics, fullPath);
                     const parsed = path.parse(relativePath);
@@ -42,12 +49,16 @@ async function processAllCPreviews() {
 
                     if (!previewExists) {
                         await limit(async () => {
-                            console.log(`${getDate()} Generating comic previews for: ${relativePath}`);
+                            console.log(
+                                `${getDate()} Generating comic previews for: ${relativePath}`,
+                            );
                             await fsPromises.mkdir(previewDirPath, { recursive: true });
 
                             const zip = new AdmZip(fullPath);
                             zip.extractAllTo(previewDirPath, true);
-                            console.log(`${getDate()} Finished generating comic previews for: ${relativePath}`);
+                            console.log(
+                                `${getDate()} Finished generating comic previews for: ${relativePath}`,
+                            );
                         });
                     }
                 } catch (fileErr) {

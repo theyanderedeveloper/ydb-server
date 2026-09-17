@@ -38,6 +38,7 @@ export const targetWindowResizeWidthChange = () => {
 };
 
 export function initSidebar() {
+    targetWindowResizeWidthChange()
     window.addEventListener("resize", targetWindowResizeWidthChange);
 
     const resizer = el("resizer");

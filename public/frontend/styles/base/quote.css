@@ -4,7 +4,7 @@
     border: 1px solid var(--border-subtle);
     border-left: 4px solid var(--accent);
     border-radius: var(--radius);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 8px 24px #00000033;
     transition: ease-out 0.5s, var(--transition-smooth);
     font-size: 18px;
     font-weight: 400;

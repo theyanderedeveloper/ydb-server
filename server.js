@@ -2,7 +2,7 @@ const express = require("express");
 const fsPromises = require("fs/promises");
 const path = require("path");
 
-const { helmetMiddleware, cacheControlMiddleware } = require("./modules/security");
+const { helmetMiddleware, } = require("./modules/security");
 const { requestLogger } = require("./modules/logger");
 const { getDate, getLocalIP, getAllExtensions, DIRS, } = require("./modules/smallfunctions");
 const { processAllPreviews } = require("./modules/mediaConverters");
@@ -15,7 +15,6 @@ const PORT = process.env.PORT || 8645;
 app.disable("x-powered-by");
 
 app.use(helmetMiddleware);
-app.use(cacheControlMiddleware);
 
 app.set("trust proxy", 1);
 
