@@ -5,36 +5,24 @@ const helmetMiddleware = helmet({
     contentSecurityPolicy: {
         directives: {
             defaultSrc: ["'self'"],
-            scriptSrc: [
-                "'self'",
-                "'unsafe-inline'",
-            ],
+            scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'"],
             scriptSrcAttr: ["'unsafe-inline'"],
+            workerSrc: ["'self'", "blob:"],
+            childSrc: ["'self'", "blob:"],
             styleSrc: [
                 "'self'",
                 "'unsafe-inline'",
                 "https://cdnjs.cloudflare.com",
-                "https://fonts.googleapis.com"
+                "https://fonts.googleapis.com",
             ],
-            imgSrc: ["'self'", "data:", "https:"],
+            imgSrc: ["'self'", "data:", "https:", "blob:"],
             mediaSrc: ["'self'", "blob:"],
-            connectSrc: [
-                "'self'",
-            ],
-            fontSrc: [
-                "'self'",
-                "https://fonts.gstatic.com",
-                "https://cdnjs.cloudflare.com"
-            ],
+            connectSrc: ["'self'"],
+            fontSrc: ["'self'", "https://fonts.gstatic.com", "https://cdnjs.cloudflare.com"],
             objectSrc: ["'none'"],
             upgradeInsecureRequests: [],
         },
-    },
-    hsts: {
-        maxAge: 63072000,
-        includeSubDomains: true,
-        preload: true,
-    },
+    }
 });
 
-module.exports = { helmetMiddleware, };
+module.exports = { helmetMiddleware };

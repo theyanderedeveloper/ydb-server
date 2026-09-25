@@ -5,17 +5,20 @@ const os = require("os");
 const fs = require("fs");
 
 const baseDir = path.join(__dirname, "..");
-const databaseDir = path.join(baseDir, "public");
+const databaseDir = path.join(baseDir, "..", "database");
+const allDirs = path.join(baseDir, "..");
 
 const DIRS = {
     dir: baseDir,
     database: databaseDir,
-    public: path.join(databaseDir, "frontend"),
+    public: path.join(baseDir, "frontend"),
     files: path.join(databaseDir, "files"),
     comics: path.join(databaseDir, "comics"),
     blogs: path.join(databaseDir, "blogs"),
     cpages: path.join(databaseDir, "cpages"),
     previews: path.join(databaseDir, "previews"),
+    all: allDirs,
+    backup: path.join(allDirs, "backups"),
 };
 
 function getDate() {

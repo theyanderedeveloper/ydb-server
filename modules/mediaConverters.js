@@ -7,6 +7,8 @@ const { getDate, DIRS } = require("./smallfunctions");
 
 const limit = pLimit(1);
 
+const MAX_FILE_SIZE = 1 * 1024 * 1024 * 1024;
+
 
 async function generateVideoPreview(filePath, outputFolder) {
     await limit(async () => {
@@ -92,6 +94,12 @@ async function processAllPreviews() {
 
                         if (!safe) {
                             console.log(`${getDate()} Skipping dangerous video: ${entry.name}`);
+                            continue;
+                        }
+
+                        const stats = await fsPromises.stat(fullPath);
+                        if (stats.size >= MAX_FILE_SIZE) {
+                            console.log(`${getDate()} Skipping video (size >= 1GB): ${entry.name}`);
                             continue;
                         }
 
