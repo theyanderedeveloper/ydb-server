@@ -1,0 +1,81 @@
+.frame {
+    background: var(--bg-surface);
+    padding: 24px;
+    animation: slideIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    border-radius: var(--radius);
+    border: 1px solid var(--border-subtle);
+}
+
+.frameHeader {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 16px;
+    border-bottom: 1px solid var(--border-subtle);
+    padding-bottom: 16px;
+    text-align: left;
+    height: auto;
+}
+
+.frameBack {
+    font-size: 60px;
+    color: var(--text-primary);
+    transition: var(--transition-smooth);
+    user-select: none;
+    cursor: pointer;
+}
+
+.frameBack:hover {
+    color: var(--accent);
+}
+
+.frameID {
+    font-size: 20px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    color: var(--text-primary);
+}
+
+.frameText {
+    line-height: 1.6;
+    word-wrap: break-word;
+}
+
+.frameLinkList {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.frameLinkListItem {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 16px;
+    padding: 14px 18px;
+    background: #ffffff05;
+    border-radius: var(--radius);
+    border: 1px solid var(--border-subtle);
+    user-select: none;
+    cursor: pointer;
+    transition: var(--transition-smooth);
+}
+
+.frameLinkListItem img {
+    top: 0;
+    width: 24px;
+    height: 24px;
+    border-radius: var(--radius);
+}
+
+.frameLinkListItem span {
+    font-weight: 500;
+    font-size: 14px;
+    color: var(--text-primary);
+}
+
+.frameLinkListItem:hover, .frameLinkListItem:active {
+    background: #ffffff0d;
+    border-color: var(--accent);
+    box-shadow: 0 6px 16px #0000004d;
+}

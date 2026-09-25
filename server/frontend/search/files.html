@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Search Files | Vanilla's Vault</title>
+  <link rel="icon" type="image/x-icon" href="/favicon">
+  <link rel="canonical" href="https://database.theyandere.dev/search/files" />
+
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://database.theyandere.dev/search/files">
+  <meta property="og:title" content="Search Files | Vanilla's Vault">
+  <meta property="og:description" content="Search files saved and listed in Vanilla's Vault.">
+  <meta property="og:image" content="/resources/media/logos/nexussysdev_old">
+
+  <meta name="twitter:card" content="summary">
+  <meta property="twitter:url" content="https://database.theyandere.dev/search/files">
+  <meta property="twitter:title" content="Search Files | Vanilla's Vault">
+  <meta property="twitter:description" content="Search files saved and listed in Vanilla's Vault.">
+
+  <link rel="stylesheet" href="/styles/base/main" />
+  <link rel="stylesheet" href="/styles/fileSearcher/main" />
+</head>
+
+<body>
+  <div id="sidebar">
+    <ul id="otherPages">
+      <li><a href="/search/comics">Comics</a></li>
+      <li><a href="/search/files">Files</a></li>
+      <li><a href="/">Main page</a></li>
+    </ul>
+    <div id="breadcrumb"></div>
+
+    <div id="sort-bar">
+      <span class="sort-label">Sort by:</span>
+      <div id="sort-container">
+        <button class="sort-btn active" onclick="handleSort('name')">Name ▴</button>
+        <button class="sort-btn" onclick="handleSort('atime')">Created</button>
+        <button class="sort-btn" onclick="handleSort('mtime')">Modified</button>
+        <button class="sort-btn" onclick="handleSort('size')">Size</button>
+      </div>
+    </div>
+
+    <div id="file-list"></div>
+  </div>
+
+  <div id="resizer" class="resizer"></div>
+
+  <div id="preview">
+    <div id="content">Select a file from the sidebar.</div>
+  </div>
+  
+  <script src="/scripts/lib/marked"></script>
+  <script src="/scripts/lib/hls"></script>
+  <script src="/scripts/lib/heic2any"></script>
+  <script src="/scripts/general/main" type="module"></script>
+  <script src="/scripts/fileSearcher/main" type="module"></script>
+</body>
+
+
+</html>

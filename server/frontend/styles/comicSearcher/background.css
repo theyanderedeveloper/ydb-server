@@ -1,0 +1,18 @@
+video.customComicSearchVideo {
+    position: fixed;
+    overflow: hidden;
+    inset: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: -99999;
+    object-fit: cover;
+}
+
+.bg-canvas {
+    position: relative;
+    overflow: hidden;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+    z-index: -9999;
+}
