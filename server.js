@@ -78,4 +78,6 @@ async function startServer() {
     }
 }
 
-await startServer();
+(async () => {
+  await startServer();
+})();

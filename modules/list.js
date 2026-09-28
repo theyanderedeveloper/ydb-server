@@ -1,6 +1,6 @@
 const fsPromises = require("fs/promises");
 const path = require("path");
-const { getSafePath, } = require("./smallfunctions");
+const { getSafePath } = require("./smallfunctions");
 
 async function getDirectoryItems(targetBase, queryPath = "") {
     const dirPath = getSafePath(queryPath, targetBase);
@@ -17,7 +17,10 @@ async function getDirectoryItems(targetBase, queryPath = "") {
                     mtime: null,
                     size: 0
                 }));
-                const isDir = file.isDirectory();
+
+                const isDir = typeof fileStats.isDirectory === "function" 
+                    ? fileStats.isDirectory() 
+                    : file.isDirectory();
 
                 return {
                     name: file.name,
@@ -25,7 +28,7 @@ async function getDirectoryItems(targetBase, queryPath = "") {
                     path: path.join(relativeDir, file.name).replace(/\\/g, "/"),
                     createdAt: fileStats.birthtime ? fileStats.birthtime.getTime() : null,
                     updatedAt: fileStats.mtime ? fileStats.mtime.getTime() : null,
-                    size: isDir ? 0 : fileStats.size,
+                    size: isDir ? 0 : (fileStats.size || 0),
                 };
             })
     );
@@ -33,4 +36,4 @@ async function getDirectoryItems(targetBase, queryPath = "") {
     return items;
 }
 
-module.exports = { getDirectoryItems}
+module.exports = { getDirectoryItems };

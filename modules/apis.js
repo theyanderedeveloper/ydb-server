@@ -19,8 +19,8 @@ function downloadApi(req, res, next) {
         return res.status(403).end();
     }
 
-    res.sendFile(safePath, (err) => {
-        if (err) {
+    res.download(safePath, (err) => {
+        if (err && !res.headersSent) {
             next();
         }
     });
