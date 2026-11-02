@@ -35,13 +35,16 @@ databaseExtensions = getAllExtensions(DIRS.public, databaseExtensions);
 const searchPages = ["files", "comics"];
 
 searchPages.forEach((page) => {
-    app.get([`/search/${page}`, `/search/${page}/*`], (req, res) => {
+    // ✅ Express 5: wildcard segments must be named
+    app.get([`/search/${page}`, `/search/${page}/*splat`], (req, res) => {
         res.sendFile(path.join(DIRS.public, "search", `${page}.html`));
     });
 });
 
 app.use(express.static(DIRS.public, { extensions: databaseExtensions }));
-app.get("/download/*", downloadApi);
+
+// ✅ Express 5: wildcard segments must be named
+app.get("/download/*splat", downloadApi);
 app.get("/list", listApi);
 
 app.use((req, res) => {

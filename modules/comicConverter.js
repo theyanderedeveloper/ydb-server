@@ -1,7 +1,7 @@
 const fsPromises = require("fs/promises");
 const path = require("path");
 const AdmZip = require("adm-zip");
-const pLimit = require("p-limit");
+const { default: pLimit } = require("p-limit");
 const { getDate, DIRS } = require("./smallfunctions");
 
 const limit = pLimit(2);
