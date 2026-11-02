@@ -1,5 +1,5 @@
 const { promisify } = require("util");
-const ffprobe = promisify(require("fluent-ffmpeg").ffprobe);
+const ffprobe = promisify(require("@modernized/fluent-ffmpeg").ffprobe);
 const path = require("path");
 const os = require("os");
 const fs = require("fs");
@@ -24,18 +24,39 @@ const DIRS = {
 function getDate() {
     return `[${new Date().toLocaleString()}]`;
 }
+function getAllExtensions(dir, extensionsSet = new Set()) {
+    let entries;
+    try {
+        entries = fs.readdirSync(dir, { withFileTypes: true });
+    } catch (err) {
+        console.error(`Failed to read ${dir}:`, err);
+        return Array.from(extensionsSet);
+    }
+    for (const entry of entries) {
+        const fullPath = path.join(dir, entry.name);
+        if (entry.isDirectory()) {
+            getAllExtensions(fullPath, extensionsSet);
+        } else if (entry.isFile()) {
+            const ext = path.extname(entry.name).toLowerCase().slice(1);
+            if (!ext) continue;
+            if (extensionsSet instanceof Set) extensionsSet.add(ext);
+            else if (!extensionsSet.includes(ext)) extensionsSet.push(ext);
+        }
+    }
+    return Array.from(extensionsSet);
+}
 
 const formatBytes = (bytes) => {
     if (!bytes || bytes === 0) return "0B";
-    const sizes = ["B", "KB", "MB", "GB", "TB"];
+    const sizes = ["B", "KB", "MB", "GB"];
     const i = Math.floor(Math.log(bytes) / Math.log(1024));
     return `${(bytes / Math.pow(1024, i)).toFixed(i === 0 ? 0 : 2)}${sizes[i]}`;
-}
+};
 
 async function isSafeToProcess(filePath) {
     try {
         const metadata = await ffprobe(filePath);
-        if (metadata?.streams?.some(s => s.codec_type === "video")) {
+        if (metadata?.streams?.some((s) => s.codec_type === "video")) {
             return true;
         }
         console.error(`${getDate()} Detected unsafe file: ${filePath}`);
@@ -46,28 +67,16 @@ async function isSafeToProcess(filePath) {
     }
 }
 
-
-
-const getSafePath = (userPath, baseDir) => {
-    const safeBase = path.resolve(baseDir);
-    const resolvedPath = path.resolve(safeBase, decodeURIComponent(userPath));
-
-    if (!resolvedPath.startsWith(safeBase)) {
-        throw new Error("Unsafe path detected");
-    }
-
-    return resolvedPath;
-};
-
 function getTargetBase(type) {
-    if (type) {
-        if (type.toLowerCase().startsWith("cr") || type.toLowerCase().startsWith("comicr")) return DIRS.cpages;
-        if (type.toLowerCase().startsWith("co")) return DIRS.comics;
-        if (type.toLowerCase().startsWith("bl")) return DIRS.blogs;
-        if (type.toLowerCase().startsWith("vid")) return DIRS.previews;
-    }
+    if (Array.isArray(type)) type = type[0];
+    if (typeof type !== "string") type = "";
+    if (type.toLowerCase().startsWith("cr") || type.toLowerCase().startsWith("comicr")) return DIRS.cpages;
+    if (type.toLowerCase().startsWith("co")) return DIRS.comics;
+    if (type.toLowerCase().startsWith("bl")) return DIRS.blogs;
+    if (type.toLowerCase().startsWith("vid")) return DIRS.previews;
     return DIRS.files;
 }
+
 let cachedLocalIP = null;
 
 function getLocalIP() {
@@ -82,25 +91,40 @@ function getLocalIP() {
             }
         }
     }
-    return "192.168.8.205";
+    return "127.0.0.1";
 }
 
-function getAllExtensions(dir, extensionsSet = new Set()) {
+
+function getSafePath(userPath, baseDir) {
+    if (typeof userPath !== "string") userPath = "";
+
+    const safeBase = fs.realpathSync(baseDir);
+    let resolvedPath;
     try {
-        const entries = fs.readdirSync(dir, { withFileTypes: true });
-        for (const entry of entries) {
-            const fullPath = path.join(dir, entry.name);
-            if (entry.isDirectory()) {
-                getAllExtensions(fullPath, extensionsSet);
-            } else if (entry.isFile()) {
-                const ext = path.extname(entry.name).toLowerCase().slice(1);
-                if (ext) extensionsSet.add(ext);
-            }
-        }
-    } catch {
+        resolvedPath = fs.realpathSync(path.join(safeBase, userPath));
+    } catch (err) {
+        throw err;
     }
-    return Array.from(extensionsSet);
+
+    const inside =
+        resolvedPath === safeBase || resolvedPath.startsWith(safeBase + path.sep);
+
+    if (!inside) {
+        const e = new Error("Unsafe path");
+        e.status = 403;
+        throw e;
+    }
+    return resolvedPath;
 }
 
 
-module.exports = { getTargetBase, isSafeToProcess, getDate, getSafePath, getLocalIP, getAllExtensions, formatBytes, DIRS, };
+module.exports = {
+    getTargetBase,
+    isSafeToProcess,
+    getDate,
+    getSafePath,
+    getLocalIP,
+    getAllExtensions,
+    formatBytes,
+    DIRS,
+};

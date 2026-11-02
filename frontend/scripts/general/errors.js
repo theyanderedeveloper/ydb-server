@@ -27,10 +27,10 @@ export function renderError(code, title, message, context = "") {
             </div>
             <div class="frameLinkList">
                 <div class="frameLinkListItem" id="btn-refresh">
-                    <span>🔄 REFRESH PAGE</span>
+                    <span>🔄 Refresh page</span>
                 </div>
                 <div class="frameLinkListItem" id="btn-home">
-                    <span>🏠 RETURN HOME</span>
+                    <span>🏠 Return home</span>
                 </div>
             </div>
         </div>

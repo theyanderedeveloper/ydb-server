@@ -5,13 +5,16 @@ const { getDate, DIRS } = require("./smallfunctions");
 
 async function createABackup() {
     try {
-        const backupDir = DIRS.backup
+        const backupDir = DIRS.backup;
 
         if (!fs.existsSync(backupDir)) {
             fs.mkdirSync(backupDir, { recursive: true });
         }
 
-        const safeDateName = getDate().replace(/[\/:\s,]+/g, "-").replace(/-+/g, "-").replace("[", "").replace("]", "");
+        const safeDateName = getDate()
+            .replace(/[^0-9A-Za-z._-]+/g, "-")
+            .replace(/-+/g, "-")
+            .replace(/^-|-$/g, "");
         const backupFileName = `${safeDateName}.zip`;
         const backupPath = path.join(backupDir, backupFileName);
 
@@ -26,7 +29,7 @@ async function createABackup() {
         } else if (archiverPkg.default && typeof archiverPkg.default === "function") {
             archive = archiverPkg.default("zip", { zlib: { level: 9 } });
         } else {
-            throw new Error(getDate, " Could not initialize archiver instance.");
+            throw new Error(`${getDate},Could not initialize archiver instance.`);
         }
 
         await new Promise((resolve, reject) => {
@@ -38,7 +41,7 @@ async function createABackup() {
             const directoriesToBackup = [
                 { dir: DIRS.files, name: "files" },
                 { dir: DIRS.comics, name: "comics" },
-                { dir: DIRS.blogs, name: "blogs" }
+                { dir: DIRS.blogs, name: "blogs" },
             ];
 
             for (const item of directoriesToBackup) {
@@ -62,12 +65,13 @@ function rotateBackups(backupDir) {
     try {
         if (!fs.existsSync(backupDir)) return;
 
-        const files = fs.readdirSync(backupDir)
+        const files = fs
+            .readdirSync(backupDir)
             .filter((file) => file.endsWith(".zip"))
             .map((file) => ({
                 name: file,
                 path: path.join(backupDir, file),
-                time: fs.statSync(path.join(backupDir, file)).mtime.getTime()
+                time: fs.statSync(path.join(backupDir, file)).mtime.getTime(),
             }))
             .sort((a, b) => b.time - a.time);
 
@@ -82,4 +86,4 @@ function rotateBackups(backupDir) {
     }
 }
 
-module.exports = { createABackup };
+module.exports = { createABackup, rotateBackups };

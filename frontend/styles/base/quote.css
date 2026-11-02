@@ -13,6 +13,7 @@
     hyphens: auto;
     text-wrap: normal;
     transition: all var(--transition-smooth);
+    width: 100%;
 }
 
 .quoteRandom.loading,

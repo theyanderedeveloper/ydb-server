@@ -1,24 +1,25 @@
 .dropdownmenu {
     display: grid;
-    grid-template-rows: 48px 0fr;
+    grid-template-rows: auto 0fr;
     overflow: hidden;
     transition: grid-template-rows var(--transition-smooth);
     border-radius: var(--radius);
     border: #12141c70 2px solid;
+    width: 100%;
 }
 
 .dropdownmenu.active {
-    grid-template-rows: 48px 1fr;
+    grid-template-rows: auto 1fr;
 }
 
 .dropdownbutton {
     color: white;
     background: #3a3d4792;
     padding: 4px 8px;
-    grid-row: 1;
-    line-height: 40px;
     border-bottom: #12141c70 2px solid;
+    text-wrap: wrap;
 }
+
 
 .dropdownbutton::before {
     content: "▼";

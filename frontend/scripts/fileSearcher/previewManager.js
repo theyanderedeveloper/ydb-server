@@ -2,6 +2,7 @@ import { FileManConfig, iconMap, EXT } from "/scripts/fileSearcher/config";
 import { el, escapeHTML } from "/scripts/general/utils";
 import { renderList } from "/scripts/fileSearcher/fileManager";
 import { injectMediaControls, loadVideo } from "/scripts/fileSearcher/videoPlayer";
+import { handleErrorResponse } from "/scripts/general/errors";
 
 function openHeicDB() {
     return new Promise((resolve, reject) => {
@@ -125,7 +126,7 @@ export async function showPreview(filePath) {
 
                     try {
                         const response = await fetch(downloadUrl, { signal });
-                        if (!response.ok) return window.handleErrorResponse(response.status, filePath);
+                        if (!response.ok) return handleErrorResponse(response.status, filePath);
 
                         const heicBlob = await response.blob();
                         if (signal.aborted) return;
@@ -257,7 +258,7 @@ export async function showPreview(filePath) {
 
         if (EXT.text.has(ext) || ext === "md" || ["md", "markdown", "rmd", "qmd"].includes(ext)) {
             const res = await fetch(downloadUrl);
-            if (!res.ok) return window.handleErrorResponse(res.status, filePath);
+            if (!res.ok) return handleErrorResponse(res.status, filePath);
 
             const text = await res.text();
             const isMd = ["md", "markdown", "rmd", "qmd"].includes(ext);

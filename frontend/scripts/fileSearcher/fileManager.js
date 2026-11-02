@@ -1,6 +1,7 @@
 import { FileManConfig, iconMap } from "/scripts/fileSearcher/config";
 import { el, formatBytes, formatDate, escapeHTML } from "/scripts/general/utils";
 import { showPreview } from "/scripts/fileSearcher/previewManager";
+import { handleErrorResponse } from "/scripts/general/errors";
 
 export const PROPERTY_MAP = { atime: "createdAt", mtime: "updatedAt", size: "size" };
 
@@ -64,8 +65,8 @@ export async function fetchFiles(path = "", pushToHistory = true) {
     try {
         const response = await fetch(`/list?path=${encodeURIComponent(fetchPath)}`);
         if (!response.ok) {
-            if (!cachedData && typeof window.handleErrorResponse === "function") {
-                window.handleErrorResponse(response.status, "Directory Access");
+            if (!cachedData && typeof handleErrorResponse === "function") {
+                handleErrorResponse(response.status, "Directory Access");
             }
             return;
         }

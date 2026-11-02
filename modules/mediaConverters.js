@@ -1,6 +1,6 @@
 const fsPromises = require("fs/promises");
 const path = require("path");
-const ffmpeg = require("fluent-ffmpeg");
+const ffmpeg = require("@modernized/fluent-ffmpeg");
 const pLimit = require("p-limit");
 const { isSafeToProcess } = require("./smallfunctions");
 const { getDate, DIRS } = require("./smallfunctions");
@@ -8,7 +8,6 @@ const { getDate, DIRS } = require("./smallfunctions");
 const limit = pLimit(1);
 
 const MAX_FILE_SIZE = 1 * 1024 * 1024 * 1024;
-
 
 async function generateVideoPreview(filePath, outputFolder) {
     await limit(async () => {
@@ -26,39 +25,54 @@ async function generateVideoPreview(filePath, outputFolder) {
                 const isRaw = res.name === "unedited";
 
                 await new Promise((resolve, reject) => {
-                    let cmd = ffmpeg(filePath);
+                    cmd = ffmpeg(filePath).inputOptions(["-nostdin", "-protocol_whitelist", "file"]);
+
+                    const killTimer = setTimeout(() => cmd.kill("SIGKILL"), 10 * 60 * 1000);
+                    cmd.on("end", () => {
+                        clearTimeout(killTimer);
+                        resolve();
+                    });
 
                     if (isRaw) {
                         cmd.outputOptions(["-c", "copy", "-hls_time", "5", "-hls_list_size", "0", "-f", "hls"]);
                     } else {
                         cmd.outputOptions([
-                            "-sws_flags", "fast_bilinear",
-                            "-vf", `scale=-2:${res.height}`,
-                            "-c:v", "libx264", "-b:v", res.bitrate,
-                            "-profile:v", "baseline", "-level", "3.0",
-                            "-hls_time", "5",
-                            "-hls_list_size", "0",
-                            "-f", "hls",
-                            "-preset", "fast",
+                            "-sws_flags",
+                            "fast_bilinear",
+                            "-vf",
+                            `scale=-2:${res.height}`,
+                            "-c:v",
+                            "libx264",
+                            "-b:v",
+                            res.bitrate,
+                            "-profile:v",
+                            "baseline",
+                            "-level",
+                            "3.0",
+                            "-hls_time",
+                            "5",
+                            "-hls_list_size",
+                            "0",
+                            "-f",
+                            "hls",
+                            "-preset",
+                            "fast",
                         ]);
                     }
 
-                    cmd.output(path.join(resFolder, "preview.m3u8"))
-                        .on("end", resolve)
-                        .on("error", reject)
-                        .run();
+                    cmd.output(path.join(resFolder, "preview.m3u8")).on("end", resolve).on("error", reject).run();
                 });
             }
             const masterContent = [
                 "#EXTM3U",
-                ...RESOLUTIONS.map(res =>
-                    `#EXT-X-STREAM-INF:BANDWIDTH=${parseInt(res.bitrate) * 1000},RESOLUTION=x${res.height}\n${res.name}/preview.m3u8`
-                )
+                ...RESOLUTIONS.map(
+                    (res) =>
+                        `#EXT-X-STREAM-INF:BANDWIDTH=${parseInt(res.bitrate) * 1000},RESOLUTION=x${res.height}\n${res.name}/preview.m3u8`
+                ),
             ].join("\n");
 
             await fsPromises.writeFile(path.join(outputFolder, "master.m3u8"), masterContent);
-        }
-        catch (err) {
+        } catch (err) {
             console.log(err);
         }
     });
@@ -83,7 +97,11 @@ async function processAllPreviews() {
             const fullPath = path.join(dir, entry.name);
 
             if (entry.isDirectory()) {
-                await walk(fullPath);
+                try {
+                    await walk(fullPath);
+                } catch (e) {
+                    console.error(`${getDate()} Skipping ${fullPath}:`, e.message);
+                }
             } else {
                 const ext = path.extname(entry.name).toLowerCase();
 
@@ -115,9 +133,16 @@ async function processAllPreviews() {
 
                         if (!previewExists) {
                             console.log(`${getDate()} Generating video previews for: ${relativePath}`);
-                            await fsPromises.mkdir(previewDirPath, { recursive: true });
-                            await generateVideoPreview(fullPath, previewDirPath);
-                            console.log(`${getDate()} Finished generating video previews for: ${relativePath}`);
+                            
+                            try {
+                                await fsPromises.mkdir(previewDirPath, { recursive: true });
+                                await generateVideoPreview(fullPath, previewDirPath);
+
+                                console.log(`${getDate()} Finished generating video previews for: ${relativePath}`);
+                            } catch (err) {
+                                console.log(`${getDate()} Error processing media file "${entry.name}": ${err}`);
+                                await fsPromises.rmdir(previewDirPath, { recursive: true });
+                            }
                         }
                     } catch (fileErr) {
                         console.error(`${getDate()} Error processing file ${entry.name}:`, fileErr);
